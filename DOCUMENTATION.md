@@ -61,23 +61,76 @@ git commit -m "Initial commit with local project files"
 git push -u origin main
 
 5️⃣ Dockerisation du projet
+Fichiers créés
 
-Création des fichiers :
+Dockerfile → décrit comment construire et exécuter l'application Next.js.
 
-Dockerfile
+.dockerignore → liste les fichiers à ignorer lors de la copie dans le container.
 
-docker-compose.yml
+docker-compose.yml → orchestre le déploiement de tous les services.
 
-Construction et lancement des containers :
+Commandes principales
+# Construire l'image Docker
+docker build -t skillspoints-app .
 
-docker-compose up --build
+# Lancer le container
+docker run -d -p 80:80 skillspoints-app
 
-6️⃣ Vérifications supplémentaires
+# Lancer tous les services avec Docker Compose
+docker-compose up -d
+
+# Arrêter les containers
+docker-compose down
+
+# Vérifier les containers en cours d'exécution
+docker ps
+
+Résultat attendu
+
+L’application Next.js est accessible sur 👉 http://localhost:8080
+ (ou selon la configuration du port).
+
+6️⃣ Architecture technique
+
+L’architecture repose sur une approche client-serveur moderne, combinant Next.js, Node.js/Express, MySQL et Docker pour garantir portabilité, performance et évolutivité.
+
+Structure générale
+
+Frontend (Next.js) : interface utilisateur et consommation des données depuis l’API.
+
+Backend (Node.js / Express) : logique métier, communication avec la base de données et endpoints REST.
+
+Base de données (MySQL) : stockage des utilisateurs, mini-cours, points et récompenses.
+
+Raisons du choix technique
+Élément	Technologie choisie	Justification
+Frontend	Next.js	Framework moderne basé sur React, SSR & SSG, performant et modulable pour des interfaces réactives.
+Backend	Node.js / Express	Simple, flexible et performant pour construire des API REST.
+Base de données	MySQL	Système relationnel fiable et adapté à la gestion structurée des données.
+Orchestration	Docker	Facilite le déploiement et assure la compatibilité entre environnements.
+Choix des patrons d’architecture
+
+Backend : MVC (Model - View - Controller)
+
+Model : gère les données et la communication avec la base de données.
+
+View : non utilisée directement (réponses JSON).
+
+Controller : logique métier et routes API.
+
+Frontend : MVVM (Model - View - ViewModel)
+
+Model : représente les données reçues depuis l’API.
+
+View : composants d’interface utilisateur (Next.js pages & components).
+
+ViewModel : gère les états, la logique de présentation et interactions via les hooks.
+
+➡️ Cette combinaison MVC (backend) + MVVM (frontend/Next.js) assure une architecture claire, maintenable et moderne.
+
+7️⃣ Vérifications supplémentaires
 
 Vérification des utilisateurs et privilèges MySQL :
 
 SELECT User, Host FROM mysql.user;
 SHOW GRANTS FOR 'rncpuser'@'localhost';
-
-
-Vérification de l’état des services et des containers Docker.
