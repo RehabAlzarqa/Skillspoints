@@ -138,3 +138,30 @@ Vérification des utilisateurs et privilèges MySQL :
 
 SELECT User, Host FROM mysql.user;
 SHOW GRANTS FOR 'rncpuser'@'localhost';
+
+         ┌─────────────┐
+         │  Frontend   │
+         │ (React/Next)│
+         └─────┬───────┘
+               │  fetch / axios
+               ▼
+         ┌─────────────┐
+         │   Backend   │
+         │ Next.js API │
+         └─────┬───────┘
+               │
+   ┌───────────┴───────────┐
+   │           │           │
+┌─────────┐ ┌─────────┐ ┌─────────┐ ┌────────────┐
+│ /users  │ │ /courses│ │ /sessions│ │ /microcours│
+│ route.js│ │ route.js│ │ route.js │ │ creation   │
+│         │ │         │ │          │ │ route.js   │
+│         │ │         │ │          │ │ apprentissage│
+│         │ │         │ │          │ │ route.js   │
+└─────────┘ └─────────┘ └─────────┘ └────────────┘
+               │
+               ▼
+         ┌─────────────┐
+         │ Database    │
+         │ (MySQL/DB) │
+         └─────────────┘
