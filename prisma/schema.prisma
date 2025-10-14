@@ -14,17 +14,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// ---------- Kéyants du projet ----------
-
 model Utilisateur {
-  id          Int          @id @default(autoincrement())
+  id          Int                     @id @default(autoincrement())
   nom         String
-  email       String       @unique
+  email       String                  @unique
   motDePasse  String
-  totalPoints Int          @default(0)
+  totalPoints Int                     @default(0)
   points      Points[]
   recompenses Recompense[]
-  microcours  Microcours[]
+  microcours  Utilisateur_Microcours[]
 }
 
 model Points {
@@ -35,17 +33,27 @@ model Points {
 }
 
 model Recompense {
-  id            Int          @id @default(autoincrement())
-  name          String
+  id             Int          @id @default(autoincrement())
+  name           String
   pointsRequired Int
-  utilisateur   Utilisateur? @relation(fields: [utilisateurId], references: [id])
-  utilisateurId Int?
+  utilisateur    Utilisateur? @relation(fields: [utilisateurId], references: [id])
+  utilisateurId  Int?
 }
 
 model Microcours {
+  id          Int                     @id @default(autoincrement())
+  title       String
+  type        String                  // "creation" ou "apprentissage"
+  utilisateurs Utilisateur_Microcours[]
+}
+
+// Table pivot pour la relation Many-to-Many
+model Utilisateur_Microcours {
   id            Int          @id @default(autoincrement())
-  title         String
-  type          String       // "creation" ou "apprentissage"
-  utilisateur   Utilisateur? @relation(fields: [utilisateurId], references: [id])
-  utilisateurId Int?
+  utilisateur   Utilisateur  @relation(fields: [utilisateurId], references: [id])
+  utilisateurId Int
+  microcours    Microcours   @relation(fields: [microcoursId], references: [id])
+  microcoursId  Int
+
+  @@unique([utilisateurId, microcoursId])
 }
