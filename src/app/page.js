@@ -35,5 +35,4 @@ export default function Home() {
       <pre>{JSON.stringify(microcours, null, 2)}</pre>
     </div>
   );
-}
-ر;
+};
