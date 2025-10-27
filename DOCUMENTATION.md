@@ -99,14 +99,14 @@ Structure générale
 
 Frontend (Next.js) : interface utilisateur et consommation des données depuis l’API.
 
-Backend (Node.js / Express) : logique métier, communication avec la base de données et endpoints REST.
+Backend (next.js API route) : logique métier, communication avec la base de données et endpoints REST.
 
 Base de données (MySQL) : stockage des utilisateurs, mini-cours, points et récompenses.
 
 Raisons du choix technique
 Élément	Technologie choisie	Justification
 Frontend	Next.js	Framework moderne basé sur React, SSR & SSG, performant et modulable pour des interfaces réactives.
-Backend	Node.js / Express	Simple, flexible et performant pour construire des API REST.
+Backend	next.js / API ROUTE, flexible et performant pour construire des API REST.
 Base de données	MySQL	Système relationnel fiable et adapté à la gestion structurée des données.
 Orchestration	Docker	Facilite le déploiement et assure la compatibilité entre environnements.
 Choix des patrons d’architecture
@@ -116,7 +116,7 @@ Choix des patrons d’architecture
 
 L’ensemble du projet repose sur le modèle MVC (Model – View – Controller), appliqué à la fois au backend et au frontend, afin de garantir une structure claire, maintenable et cohérente entre les deux couches.
 
-Backend (Node.js / Express)
+Backend (NEXT.JS API ROUTE)
 
 Model : gère la structure et la manipulation des données (via Prisma et MySQL).
 
