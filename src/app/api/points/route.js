@@ -1,5 +1,15 @@
+import { prisma } from "@/lib/prisma";
+
 export async function GET() {
-  return new Response(JSON.stringify([{ id: 1, userId: 1, points: 100 }]), {
-    headers: { "Content-Type": "application/json" },
-  });
+  try {
+    const points = await prisma.point.findMany();
+    return new Response(JSON.stringify(points), {
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 }

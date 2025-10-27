@@ -1,7 +1,17 @@
-// apprentissage
+import { prisma } from "@/lib/prisma";
+
 export async function GET() {
-  return new Response(
-    JSON.stringify([{ id: 2, title: "Apprendre Microcours 1" }]),
-    { headers: { "Content-Type": "application/json" } }
-  );
+  try {
+    const apprentissage = await prisma.microcours.findMany({
+      where: { type: "apprentissage" },
+    });
+    return new Response(JSON.stringify(apprentissage), {
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 }

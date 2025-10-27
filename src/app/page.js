@@ -8,7 +8,7 @@ export default function Home() {
   const [microcours, setMicrocours] = useState([]);
 
   useEffect(() => {
-    fetch("/api/utilisateur")
+    fetch("/api/Utilisateurs")
       .then((res) => res.json())
       .then((data) => setUsers(data));
     fetch("/api/points")
