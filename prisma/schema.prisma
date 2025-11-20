@@ -10,6 +10,97 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
+}
+// ------------ MODELS ------------
+
+// UTILISATEURS
+model utilisateur {
+  id             Int      @id @default(autoincrement())
+  name           String?
+  email          String?  @unique
+  motDePasse     String?
+  totalDesPoints Int      @default(0)
+  createdAt      DateTime @default(now())
+
+  // Relations
+  points               points[]
+  microcours           microCours[]            @relation("UserCreatedCourses")
+  recompensesRelations utilisateurRecompense[]
+  niveauxRelations     Niveau[]                @relation("UserLevels")
+  recompensesDirect    Recompense[]
+  apprentissage        utilisateurMicrocours[]
+}
+
+// MicroCours
+model microCours {
+  id          Int      @id @default(autoincrement())
+  titre       String
+  niveau      String?
+  duree       Int
+  description String?
+  creatorId   Int
+  createdAt   DateTime @default(now())
+
+  createur      utilisateur             @relation("UserCreatedCourses", fields: [creatorId], references: [id])
+  apprentissage utilisateurMicrocours[]
+}
+
+// Table pivot utilisateur <-> microcours
+model utilisateurMicrocours {
+  id            Int @id @default(autoincrement())
+  utilisateurId Int
+  microcoursId  Int
+
+  utilisateur utilisateur @relation(fields: [utilisateurId], references: [id])
+  microcours  microCours  @relation(fields: [microcoursId], references: [id])
+}
+
+// Points
+model points {
+  id               Int      @id @default(autoincrement())
+  valeur_points    Int
+  date_acquisition DateTime
+  type_action      String?
+  utilisateurId    Int
+
+  utilisateur utilisateur @relation(fields: [utilisateurId], references: [id])
+}
+
+// Recompense
+model Recompense {
+  id              Int      @id @default(autoincrement())
+  nom             String?
+  type            String?
+  points_requis   Int?
+  etat_disponible Boolean? @default(true)
+  utilisateurId   Int?
+  levelId         Int?
+
+  utilisateur utilisateur?            @relation(fields: [utilisateurId], references: [id])
+  niveau      Niveau?                 @relation(fields: [levelId], references: [id])
+  list        utilisateurRecompense[]
+}
+
+// Table pivot utilisateur <-> recompense
+model utilisateurRecompense {
+  id            Int @id @default(autoincrement())
+  utilisateurId Int
+  recompenseId  Int
+
+  utilisateur utilisateur @relation(fields: [utilisateurId], references: [id])
+  recompense  Recompense  @relation(fields: [recompenseId], references: [id])
+}
+
+model Niveau {
+  id         Int     @id @default(autoincrement())
+  nom        String?
+  min_points Int?
+  max_points Int?
+
+  recompenses  Recompense[]
+  utilisateurs utilisateur[] @relation("UserLevels")
+
+  @@map("Niveau")
 }
