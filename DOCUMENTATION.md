@@ -110,27 +110,58 @@ Base de données	MySQL	Système relationnel fiable et adapté à la gestion stru
 Orchestration	Docker	Facilite le déploiement et assure la compatibilité entre environnements.
 Choix des patrons d’architecture
 
-Backend : MVC (Model - View - Controller)
 
-Model : gère les données et la communication avec la base de données.
+🎯 Architecture logicielle choisie : MVC pour le backend et le frontend
 
-View : non utilisée directement (réponses JSON).
+L’ensemble du projet repose sur le modèle MVC (Model – View – Controller), appliqué à la fois au backend et au frontend, afin de garantir une structure claire, maintenable et cohérente entre les deux couches.
 
-Controller : logique métier et routes API.
+Backend (Node.js / Express)
 
-Frontend : MVVM (Model - View - ViewModel)
+Model : gère la structure et la manipulation des données (via Prisma et MySQL).
+
+View : non utilisée directement, les réponses sont renvoyées en JSON.
+
+Controller : contient la logique métier et gère les routes de l’API.
+
+Frontend (Next.js / React)
 
 Model : représente les données reçues depuis l’API.
 
-View : composants d’interface utilisateur (Next.js pages & components).
+View : affiche les données via les composants React et les pages Next.js.
 
-ViewModel : gère les états, la logique de présentation et interactions via les hooks.
+Controller : gère les interactions et la logique via les hooks React.
 
-➡️ Cette combinaison MVC (backend) + MVVM (frontend/Next.js) assure une architecture claire, maintenable et moderne.
-
+💡 Ce choix d’architecture MVC unifiée facilite la compréhension du code, renforce la cohérence entre les couches et simplifie la maintenance du projet.
 7️⃣ Vérifications supplémentaires
 
 Vérification des utilisateurs et privilèges MySQL :
 
 SELECT User, Host FROM mysql.user;
 SHOW GRANTS FOR 'rncpuser'@'localhost';
+
+         ┌─────────────┐
+         │  Frontend   │
+         │ (React/Next)│
+         └─────┬───────┘
+               │  fetch / axios
+               ▼
+         ┌─────────────┐
+         │   Backend   │
+         │ Next.js API │
+         └─────┬───────┘
+               │
+   ┌───────────┴───────────┐
+   │           │           │
+┌─────────┐ ┌─────────┐ ┌─────────┐ ┌────────────┐
+│ /users  │ │ /courses│ │ /sessions│ │ /microcours│
+│ route.js│ │ route.js│ │ route.js │ │ creation   │
+│         │ │         │ │          │ │ route.js   │
+│         │ │         │ │          │ │ apprentissage│
+│         │ │         │ │          │ │ route.js   │
+└─────────┘ └─────────┘ └─────────┘ └────────────┘
+               │
+               ▼
+         ┌─────────────┐
+         │ Database    │
+         │ (MySQL/DB) │
+         └─────────────┘
