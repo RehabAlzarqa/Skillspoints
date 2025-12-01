@@ -15,6 +15,7 @@ datasource db {
 }
 // ------------ MODELS ------------
 
+
 // UTILISATEURS
 model utilisateur {
   id             Int      @id @default(autoincrement())
@@ -25,26 +26,24 @@ model utilisateur {
   createdAt      DateTime @default(now())
 
   // Relations
-  points               points[]
   microcours           microCours[]            @relation("UserCreatedCourses")
-  recompensesRelations utilisateurRecompense[]
-  niveauxRelations     Niveau[]                @relation("UserLevels")
-  recompensesDirect    Recompense[]
   apprentissage        utilisateurMicrocours[]
+  historiqueRecompense historiqueRecompense[]
+  utilisationCodes     utilisationCode[]
 }
 
 // MicroCours
 model microCours {
   id          Int      @id @default(autoincrement())
   titre       String
-  niveau      String?
-  duree       Int
   description String?
-  creatorId   Int
+  createurId  Int
   createdAt   DateTime @default(now())
 
-  createur      utilisateur             @relation("UserCreatedCourses", fields: [creatorId], references: [id])
+  createur      utilisateur             @relation("UserCreatedCourses", fields: [createurId], references: [id])
   apprentissage utilisateurMicrocours[]
+
+  code          Code?   //
 }
 
 // Table pivot utilisateur <-> microcours
@@ -57,50 +56,48 @@ model utilisateurMicrocours {
   microcours  microCours  @relation(fields: [microcoursId], references: [id])
 }
 
-// Points
-model points {
+// Code pour microcours
+model Code {
   id               Int      @id @default(autoincrement())
-  valeur_points    Int
-  date_acquisition DateTime
-  type_action      String?
-  utilisateurId    Int
+  valeur           String   @unique
+  maxUtilisations  Int      @default(10)
+  utilisations     Int      @default(0)
+  microcoursId     Int      @unique
+
+  microcours       microCours @relation(fields: [microcoursId], references: [id])
+  utilisationsCode utilisationCode[]
+}
+
+// Utilisation du code
+model utilisationCode {
+  id            Int      @id @default(autoincrement())
+  utilisateurId Int
+  codeId        Int
+  date          DateTime @default(now())
 
   utilisateur utilisateur @relation(fields: [utilisateurId], references: [id])
+  code        Code        @relation(fields: [codeId], references: [id])
 }
 
 // Recompense
 model Recompense {
-  id              Int      @id @default(autoincrement())
-  nom             String?
-  type            String?
-  points_requis   Int?
-  etat_disponible Boolean? @default(true)
-  utilisateurId   Int?
-  levelId         Int?
+  id                Int      @id @default(autoincrement())
+  nom               String
+  description       String?
+  points_requis     Int
+  quantiteDisponible Int?
 
-  utilisateur utilisateur?            @relation(fields: [utilisateurId], references: [id])
-  niveau      Niveau?                 @relation(fields: [levelId], references: [id])
-  list        utilisateurRecompense[]
+  historique historiqueRecompense[]
 }
 
-// Table pivot utilisateur <-> recompense
-model utilisateurRecompense {
+// Historique Recompense
+model historiqueRecompense {
   id            Int @id @default(autoincrement())
-  utilisateurId Int
+  utilisateurId Int?
   recompenseId  Int
+  date          DateTime @default(now())
 
-  utilisateur utilisateur @relation(fields: [utilisateurId], references: [id])
-  recompense  Recompense  @relation(fields: [recompenseId], references: [id])
+  utilisateur utilisateur? @relation(fields: [utilisateurId], references: [id])
+  recompense  Recompense   @relation(fields: [recompenseId], references: [id])
 }
 
-model Niveau {
-  id         Int     @id @default(autoincrement())
-  nom        String?
-  min_points Int?
-  max_points Int?
-
-  recompenses  Recompense[]
-  utilisateurs utilisateur[] @relation("UserLevels")
-
-  @@map("Niveau")
-}
