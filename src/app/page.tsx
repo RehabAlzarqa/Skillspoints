@@ -1,55 +1,64 @@
-"use client";
-
-import { useRouter } from "next/navigation"
-import { useState } from "react";
-export default function Home() {
-  const [mail, setMail] = useState("")
-  const [pass, setPass] = useState("")
-  const router =useRouter()
-
-  const handleLogin = () => {
-    if (mail === "rehab@example.com" && pass === "12345") {
-      router.push("/dashboard");
-    } else {
-      alert("Email ou mot de passe incorrect");
-    }
-  };
-  
-
+import Link from "next/link";
+// homebage my website look like
+export default function Page() {
   return (
-    
-<div className="min-h-screen bg-gray-100 flex justify-center items-center p-4">
-  <div className="w-full max-w-md bg-white rounded-2xl shadow-2xl p-10 text-center">
-    
-    <h1 className="text-5xl font-bold mb-4">Skillspoints</h1>
-    <p className="text-lg mb-8 text-gray-600">Développez vos compétences en quelques minutes</p>
-    <button type="button" onClick={() => router.push('/dashboard')}>dashbord</button>
+    <div className="min-h-screen bg-gradient-to-br from-green-200 via-white to-purple-200">
+      <nav className="flex justify-between p-4">
+        <span className="font-semibold text-lg">SkillsPoints</span>
+        <Link
+          href="/login"
+          className="bg-gray-50 px-4 py-2 rounded-sm text-gray-600 rounded-xs cursor-pointer border border-gray-300"
+        >
+          Se connecter
+        </Link>
+      </nav>
 
-    <input  value={mail}
-    onChange={(e) => setMail(e.target.value)}
-      type="email" 
-      placeholder="Email"
-      className="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-    />
+      <div className="flex flex-col items-center justify-center min-h-[80vh] text-center gap-4 px-4">
+        <p className="font-bold text-5xl">Développez vos</p>
+        <p className="font-bold text-5xl">compétences</p>
+        <p className="text-[#4CAF50] font-bold text-5xl">en quelques minutes</p>
+        <p className="text-gray-600 max-w-xl">
+          Une plateforme d’apprentissage moderne pour acquérir de nouvelles
+          compétences rapidement et efficacement.
+        </p>
+        <div className="flex flex-wrap justify-center gap-6 mt-10 px-4">
+          {/* Card 1 */}
+          <div className="bg-white rounded-xl shadow-md p-6 max-w-xs flex flex-col items-center text-center ransform hover:scale-110 transition group">
+            <div className="w-12 h-12 rounded-full bg-[#A7F3D0] flex items-center justify-center mb-4 transform group-hover:scale-125 transition">
+              📘
+            </div>
+            <h3 className="font-semibold mb-2">Micro-cours ciblés</h3>
+            <p className="text-gray-600 text-sm">
+              Des leçons courtes et efficaces pour apprendre rapidement ce dont
+              vous avez besoin.
+            </p>
+          </div>
 
-    <input value={pass}
-    onChange={(e) => setPass(e.target.value)}
-      type="password" 
-      placeholder="Password"
-      className="w-full p-3 mb-6 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-    />
+          {/* Card 2 */}
+          <div className="bg-white rounded-xl shadow-md p-6 max-w-xs flex flex-col items-center text-center transform hover:scale-110 transition group">
+            <div className="w-12 h-12 rounded-full bg-[#E9D5FF] flex items-center justify-center mb-4 transform group-hover:scale-125 transition">
+              ⭐
+            </div>
+            <h3 className="font-semibold mb-2">Système de points</h3>
+            <p className="text-gray-600 text-sm">
+              Gagnez des points en complétant des cours et validez vos
+              compétences.
+            </p>
+          </div>
 
-    <button 
-    onClick={handleLogin}
-    className="w-full p-3 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
-      Se connecter
-    </button>
-
-    <a href="#" className="block mt-5 text-blue-500 hover:underline">
-      Mot de passe oublié?
-    </a>
-
-  </div>
-</div>
+          {/* Card 3 */}
+          <div className="bg-white rounded-xl shadow-md p-6 max-w-xs flex flex-col items-center text-center transform hover:scale-110 transition group">
+            <div className="w-12 h-12 rounded-full bg-[#FECACA] flex items-center justify-center mb-4 transform group-hover:scale-125 transition">
+              🎁
+            </div>
+            <h3 className="font-semibold mb-2">Récompenses</h3>
+            <p className="text-gray-600 text-sm">
+              Débloquez des badges et récompenses en progressant dans votre
+              apprentissage.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
