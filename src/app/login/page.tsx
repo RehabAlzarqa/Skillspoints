@@ -105,7 +105,10 @@ export default function Page() {
         </form>
 
         <div className="m-6 text-center">
-          <a href="#" className="text-sm text-[#4CAF50] hover:underline">
+          <a
+            href="/mot-de-pass-oublié"
+            className="text-sm text-[#4CAF50] hover:underline"
+          >
             Mot de passe oublié ?
           </a>
         </div>
