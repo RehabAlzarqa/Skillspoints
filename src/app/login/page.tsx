@@ -14,7 +14,7 @@ export default function Page() {
 
   // useFormik
   const form = useFormik({
-   initialValues:{ email:"", password:""}
+    initialValues: { email: "", password: "" },
     validationSchema: Yup.object({
       email: Yup.string().required("Email requis"),
       password: Yup.string().required("Mot de passe requis"),
