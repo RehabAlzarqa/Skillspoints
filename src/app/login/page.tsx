@@ -17,7 +17,13 @@ export default function Page() {
     initialValues: { email: "", password: "" },
     validationSchema: Yup.object({
       email: Yup.string().required("Email requis"),
-      password: Yup.string().required("Mot de passe requis"),
+      password: Yup.string()
+        .required("Mot de passe requis")
+        //match fun
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+          "Le mot de passe doit être fort (8 caractères, majuscule, minuscule, chiffre et symbole)."
+        ),
     }),
 
     onSubmit: async () => {
@@ -55,12 +61,13 @@ export default function Page() {
               name="email"
               value={form.values.email}
               onChange={form.handleChange}
+              onBlur={form.handleBlur}
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="votre@email.com"
               required
             />
 
-            {form.errors.email && (
+            {form.touched.email && form.errors.email && (
               <p className="text-red-500 text-sm">{form.errors.email}</p>
             )}
           </div>
@@ -76,12 +83,13 @@ export default function Page() {
               name="password"
               value={form.values.password}
               onChange={form.handleChange}
+              onBlur={form.handleBlur}
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="••••••••"
               required
             />
 
-            {form.errors.password && (
+            {form.touched.password && form.errors.password && (
               <p className="text-red-500 text-sm">{form.errors.password}</p>
             )}
           </div>
@@ -103,7 +111,7 @@ export default function Page() {
         </div>
 
         <Link
-          href="politique-de-confidentialite"
+          href="/rgpd"
           className="bg-gray-50 px-4 py-2 text-gray-600 rounded-xs cursor-pointer border border-gray-300"
         >
           Politique de confidentialité
