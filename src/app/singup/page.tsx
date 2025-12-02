@@ -3,22 +3,46 @@
 import { useFormik, validateYupSchema } from "formik";
 // next navigation always
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import * as yup from "yup";
 
 export default function SignupPage() {
+  const [isLoading, setIsLoading] = useState(false);
+
   const router = useRouter();
   const form = useFormik({
     initialValues: {
+      nome: "",
       email: "",
       password: "",
+      confirmpassword: "",
     },
     validationSchema: yup.object({
-      email: yup.string(),
-      password: yup.string(),
+      nome: yup.string().required("Nome requis"),
+      email: yup
+        .string()
+        .email("Format email invalide")
+        .required("Email requis"),
+      password: yup
+        .string()
+        .matches(
+          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+          "Le mot de passe doit être fort (8 caractères, majuscule, minuscule, chiffre et symbole)."
+        )
+        .required("Password requis"),
+
+      confirmpassword: yup
+        .string()
+        .oneOf([yup.ref("password")], "Les mots de passe ne correspondent pas")
+        .required("Veuillez confirmer le mot de passe"),
     }),
-    onSubmit: () => {
-      router.push("/login");
+    onSubmit: async () => {
+      setIsLoading(true);
+
+      setTimeout(() => {
+        router.push("/login");
+      }, 1000);
     },
   });
 
@@ -29,13 +53,7 @@ export default function SignupPage() {
         {/* Logo Icon */}
         <div className="flex justify-center mb-6">
           <div className="bg-green-500 rounded-lg p-3 w-16 h-16 flex items-center justify-center">
-            <svg
-              className="w-8 h-8 text-white"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M4 3h16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm2 4v10h2V7H6zm4 0v10h2V7h-2zm4 0v10h2V7h-2zm4 0v10h2V7h-2z" />
-            </svg>
+            put you logo
           </div>
         </div>
 
@@ -48,20 +66,25 @@ export default function SignupPage() {
         </p>
 
         {/* Form */}
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={form.handleSubmit}>
           {/* Full Name Field */}
           <div>
             <label
-              htmlFor="name"
+              htmlFor="nome"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
               Nom complet
             </label>
             <input
-              id="name"
+              id="nome"
+              name="nome"
               type="text"
-              placeholder="Jean Dupont"
+              value={form.values.nome}
+              onChange={form.handleChange}
+              onBlur={form.handleBlur}
+              placeholder="Nom"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
+              required
             />
           </div>
 
@@ -76,8 +99,13 @@ export default function SignupPage() {
             <input
               id="email"
               type="email"
+              name="email"
+              value={form.values.email}
+              onChange={form.handleChange}
+              onBlur={form.handleBlur}
               placeholder="votre@email.com"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
+              required
             />
           </div>
 
@@ -92,32 +120,44 @@ export default function SignupPage() {
             <input
               id="password"
               type="password"
+              name="password"
+              value={form.values.password}
+              onChange={form.handleChange}
+              onBlur={form.handleBlur}
               placeholder="••••••••"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
+              required
             />
           </div>
 
           {/* Confirm Password Field */}
           <div>
             <label
-              htmlFor="confirm-password"
+              htmlFor="confirmpassword"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
               Confirmer le mot de passe
             </label>
             <input
-              id="confirm-password"
+              id="confirmpassword"
               type="password"
+              name="confirmpassword"
+              value={form.values.confirmpassword}
+              onChange={form.handleChange}
+              onBlur={form.handleBlur}
               placeholder="••••••••"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
+              required
             />
           </div>
 
           {/* Sign Up Button */}
           <button
             type="submit"
+            disabled={isLoading}
             className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2.5 px-4 rounded-lg transition-colors duration-200 mt-6"
           >
+            {isLoading ? "Sinscrire en cours..." : ""}
             Sinscrire
           </button>
         </form>
@@ -138,3 +178,5 @@ export default function SignupPage() {
     </div>
   );
 }
+
+
