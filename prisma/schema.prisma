@@ -43,7 +43,7 @@ model microCours {
   createur      utilisateur             @relation("UserCreatedCourses", fields: [createurId], references: [id])
   apprentissage utilisateurMicrocours[]
 
-  code          Code?   // ✅ بدون fields / references
+  code          Code?   //
 }
 
 // Table pivot utilisateur <-> microcours
