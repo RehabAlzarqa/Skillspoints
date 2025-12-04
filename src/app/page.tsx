@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 // homebage my website look like
 export default function Page() {
@@ -6,10 +8,10 @@ export default function Page() {
       <nav className="flex justify-between p-4">
         <span className="font-semibold text-lg">SkillsPoints</span>
         <Link
-          href="/login"
+          href="/singup"
           className="bg-gray-50 px-4 py-2 rounded-sm text-gray-600 rounded-xs cursor-pointer border border-gray-300"
         >
-          Se connecter
+          commencer
         </Link>
       </nav>
 
