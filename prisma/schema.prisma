@@ -10,94 +10,97 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
-// ------------ MODELS ------------
 
 
-// UTILISATEURS
+/// UTILISATEURS
 model utilisateur {
-  id             Int      @id @default(autoincrement())
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
   name           String?
   email          String?  @unique
   motDePasse     String?
   totalDesPoints Int      @default(0)
   createdAt      DateTime @default(now())
 
-  // Relations
-  microcours           microCours[]            @relation("UserCreatedCourses")
-  apprentissage        utilisateurMicrocours[]
-  historiqueRecompense historiqueRecompense[]
-  utilisationCodes     utilisationCode[]
+  microcours      microCours[]
+  apprentissage   utilisateurMicrocours[]
+  historique      historiqueRecompense[]
+  utilisationCode utilisationCode[]
 }
 
-// MicroCours
+
+/// MICRO COURS
 model microCours {
-  id          Int      @id @default(autoincrement())
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
   titre       String
   description String?
-  createurId  Int
+  createurId  String   @db.ObjectId
   createdAt   DateTime @default(now())
 
-  createur      utilisateur             @relation("UserCreatedCourses", fields: [createurId], references: [id])
+  createur    utilisateur @relation(fields: [createurId], references: [id])
   apprentissage utilisateurMicrocours[]
 
-  code          Code?   //
+  code          Code?   // ✅ بدون fields / references
 }
 
-// Table pivot utilisateur <-> microcours
+
+/// PIVOT utilisateur <-> microCours
 model utilisateurMicrocours {
-  id            Int @id @default(autoincrement())
-  utilisateurId Int
-  microcoursId  Int
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  utilisateurId String @db.ObjectId
+  microcoursId  String @db.ObjectId
 
   utilisateur utilisateur @relation(fields: [utilisateurId], references: [id])
   microcours  microCours  @relation(fields: [microcoursId], references: [id])
 }
 
-// Code pour microcours
-model Code {
-  id               Int      @id @default(autoincrement())
-  valeur           String   @unique
-  maxUtilisations  Int      @default(10)
-  utilisations     Int      @default(0)
-  microcoursId     Int      @unique
 
-  microcours       microCours @relation(fields: [microcoursId], references: [id])
+/// CODE
+model Code {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  valeur          String   @unique
+  maxUtilisations Int      @default(10)
+  utilisations    Int      @default(0)
+  microcoursId    String   @unique @db.ObjectId
+
+  microcours      microCours @relation(fields: [microcoursId], references: [id])
   utilisationsCode utilisationCode[]
 }
 
-// Utilisation du code
+
+/// UTILISATION CODE
 model utilisationCode {
-  id            Int      @id @default(autoincrement())
-  utilisateurId Int
-  codeId        Int
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  utilisateurId String   @db.ObjectId
+  codeId        String   @db.ObjectId
   date          DateTime @default(now())
 
   utilisateur utilisateur @relation(fields: [utilisateurId], references: [id])
   code        Code        @relation(fields: [codeId], references: [id])
 }
 
-// Recompense
+
+/// RECOMPENSE
 model Recompense {
-  id                Int      @id @default(autoincrement())
-  nom               String
-  description       String?
-  points_requis     Int
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  nom                String
+  description        String?
+  points_requis      Int
   quantiteDisponible Int?
 
   historique historiqueRecompense[]
 }
 
-// Historique Recompense
+
+/// HISTORIQUE RECOMPENSE
 model historiqueRecompense {
-  id            Int @id @default(autoincrement())
-  utilisateurId Int?
-  recompenseId  Int
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  utilisateurId String?  @db.ObjectId
+  recompenseId  String   @db.ObjectId
   date          DateTime @default(now())
 
   utilisateur utilisateur? @relation(fields: [utilisateurId], references: [id])
   recompense  Recompense   @relation(fields: [recompenseId], references: [id])
 }
-

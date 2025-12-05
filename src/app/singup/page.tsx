@@ -157,7 +157,7 @@ export default function SignupPage() {
             disabled={isLoading}
             className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2.5 px-4 rounded-lg transition-colors duration-200 mt-6"
           >
-            {isLoading ? "Sinscrire en cours..." : ""}
+            {isLoading ? "Sinscrire en cours..." : "Sinscrire"}
             Sinscrire
           </button>
         </form>
