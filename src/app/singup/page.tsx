@@ -34,6 +34,7 @@ export default function SignupPage() {
 
       confirmpassword: yup
         .string()
+        //not understande
         .oneOf([yup.ref("password")], "Les mots de passe ne correspondent pas")
         .required("Veuillez confirmer le mot de passe"),
     }),
@@ -84,7 +85,6 @@ export default function SignupPage() {
               onBlur={form.handleBlur}
               placeholder="Nom"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
-              required
             />
           </div>
 
@@ -105,7 +105,6 @@ export default function SignupPage() {
               onBlur={form.handleBlur}
               placeholder="votre@email.com"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
-              required
             />
           </div>
 
@@ -126,7 +125,6 @@ export default function SignupPage() {
               onBlur={form.handleBlur}
               placeholder="••••••••"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
-              required
             />
           </div>
 
@@ -147,7 +145,6 @@ export default function SignupPage() {
               onBlur={form.handleBlur}
               placeholder="••••••••"
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
-              required
             />
           </div>
 

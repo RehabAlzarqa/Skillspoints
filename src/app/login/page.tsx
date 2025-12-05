@@ -29,10 +29,9 @@ export default function Page() {
     onSubmit: async () => {
       setIsLoading(true);
 
-      // Simulate login or call API
       setTimeout(() => {
         router.push("/dashboard");
-      }, 1000);
+      });
     },
   });
 
@@ -49,6 +48,7 @@ export default function Page() {
 
         <p className="text-gray-600 mb-8">Connectez-vous pour continuer</p>
 
+        {/* Form */}
         <form className="space-y-6" onSubmit={form.handleSubmit}>
           {/* Email */}
           <div>
@@ -77,6 +77,7 @@ export default function Page() {
             <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
               Mot de passe
             </label>
+            {/*  end of Password */}
 
             <input
               type="password"
@@ -103,14 +104,15 @@ export default function Page() {
             {isLoading ? "Connexion en cours..." : "Se connecter"}
           </button>
         </form>
+        {/* end of  Form */}
 
         <div className="m-6 text-center">
-          <a
-            href="/mot-de-pass-oublié"
+          <Link
+            href="/mpass"
             className="text-sm text-[#4CAF50] hover:underline"
           >
-            Mot de passe oublié ?
-          </a>
+            Mot de passe oublie ?
+          </Link>
         </div>
 
         <Link
