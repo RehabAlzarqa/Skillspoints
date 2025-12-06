@@ -10,14 +10,16 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
+//////////////////////////////
+// UTILISATEURS
+//////////////////////////////
 
-/// UTILISATEURS
 model utilisateur {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  id             Int      @id @default(autoincrement())
   name           String?
   email          String?  @unique
   motDePasse     String?
@@ -30,61 +32,71 @@ model utilisateur {
   utilisationCode utilisationCode[]
 }
 
+//////////////////////////////
+// MICRO COURS
+//////////////////////////////
 
-/// MICRO COURS
 model microCours {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  id          Int      @id @default(autoincrement())
   titre       String
   description String?
-  createurId  String   @db.ObjectId
+  createurId  Int
   createdAt   DateTime @default(now())
 
   createur    utilisateur @relation(fields: [createurId], references: [id])
   apprentissage utilisateurMicrocours[]
 
-  code          Code?   // ✅ بدون fields / references
+  code          Code?
 }
 
+//////////////////////////////
+// RELATION utilisateur <-> microCours
+//////////////////////////////
 
-/// PIVOT utilisateur <-> microCours
 model utilisateurMicrocours {
-  id            String @id @default(auto()) @map("_id") @db.ObjectId
-  utilisateurId String @db.ObjectId
-  microcoursId  String @db.ObjectId
+  id            Int @id @default(autoincrement())
+  utilisateurId Int
+  microcoursId  Int
 
   utilisateur utilisateur @relation(fields: [utilisateurId], references: [id])
   microcours  microCours  @relation(fields: [microcoursId], references: [id])
 }
 
+//////////////////////////////
+// CODE
+//////////////////////////////
 
-/// CODE
 model Code {
-  id              String   @id @default(auto()) @map("_id") @db.ObjectId
-  valeur          String   @unique
-  maxUtilisations Int      @default(10)
-  utilisations    Int      @default(0)
-  microcoursId    String   @unique @db.ObjectId
+  id              Int    @id @default(autoincrement())
+  valeur          String @unique
+  maxUtilisations Int    @default(10)
+  utilisations    Int    @default(0)
+  microcoursId    Int    @unique
 
   microcours      microCours @relation(fields: [microcoursId], references: [id])
   utilisationsCode utilisationCode[]
 }
 
+//////////////////////////////
+// UTILISATION CODE
+//////////////////////////////
 
-/// UTILISATION CODE
 model utilisationCode {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  utilisateurId String   @db.ObjectId
-  codeId        String   @db.ObjectId
+  id            Int      @id @default(autoincrement())
+  utilisateurId Int
+  codeId        Int
   date          DateTime @default(now())
 
   utilisateur utilisateur @relation(fields: [utilisateurId], references: [id])
   code        Code        @relation(fields: [codeId], references: [id])
 }
 
+//////////////////////////////
+// RECOMPENSE
+//////////////////////////////
 
-/// RECOMPENSE
 model Recompense {
-  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  id                 Int      @id @default(autoincrement())
   nom                String
   description        String?
   points_requis      Int
@@ -93,12 +105,14 @@ model Recompense {
   historique historiqueRecompense[]
 }
 
+//////////////////////////////
+// HISTORIQUE RECOMPENSE
+//////////////////////////////
 
-/// HISTORIQUE RECOMPENSE
 model historiqueRecompense {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  utilisateurId String?  @db.ObjectId
-  recompenseId  String   @db.ObjectId
+  id            Int      @id @default(autoincrement())
+  utilisateurId Int?
+  recompenseId  Int
   date          DateTime @default(now())
 
   utilisateur utilisateur? @relation(fields: [utilisateurId], references: [id])
