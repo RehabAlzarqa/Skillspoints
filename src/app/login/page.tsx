@@ -36,7 +36,7 @@ export default function Page() {
   });
 
   return (
-    <div className="w-full bg-linear-to-br from-green-200 via-white to-purple-200 flex items-center justify-center px-4 min-h-screen">
+    <div className="w-full bg-gradient-to-br from-cyan-100 via-emerald-50 to-pink-100 flex items-center justify-center px-4 min-h-screen">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-10 text-center">
         <div className="w-16 h-16 bg-[#4CAF50] rounded-xl flex items-center justify-center mx-auto mb-4">
           <BookOpen className="w-10 h-10 text-white" />

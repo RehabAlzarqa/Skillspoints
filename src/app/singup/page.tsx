@@ -48,7 +48,7 @@ export default function SignupPage() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-100 via-blue-50 to-purple-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-cyan-100 via-emerald-50 to-pink-100 flex items-center justify-center p-4">
       {/* Signup Form Card */}
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
         {/* Logo Icon */}
