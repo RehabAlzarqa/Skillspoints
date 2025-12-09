@@ -4,7 +4,6 @@ import { useFormik, validateYupSchema } from "formik";
 // next navigation always
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
 import * as yup from "yup";
 
 export default function SignupPage() {
@@ -30,7 +29,7 @@ export default function SignupPage() {
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
           "Le mot de passe doit être fort (8 caractères, majuscule, minuscule, chiffre et symbole)."
         )
-        .required("Password requis"),
+        .required("Le mot de passe doit être fort"),
 
       confirmpassword: yup
         .string()
@@ -53,8 +52,14 @@ export default function SignupPage() {
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
         {/* Logo Icon */}
         <div className="flex justify-center mb-6">
-          <div className="bg-green-500 rounded-lg p-3 w-16 h-16 flex items-center justify-center">
-            put you logo
+          <div className="bg-emerald-500 rounded-2xl w-16 h-16 flex items-center justify-center">
+            <svg
+              className="w-8 h-8 text-white"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1zm0 20c-4.962 0-9-4.038-9-9s4.038-9 9-9 9 4.038 9 9-4.038 9-9 9zm3.5-9c.828 0 1.5-.672 1.5-1.5S16.328 9 15.5 9 14 9.672 14 10.5s.672 1.5 1.5 1.5zm-7 0c.828 0 1.5-.672 1.5-1.5S9.328 9 8.5 9 7 9.672 7 10.5 7.672 12 8.5 12zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.39c.8 2.04 2.78 3.5 5.11 3.5z" />
+            </svg>
           </div>
         </div>
 
@@ -67,7 +72,7 @@ export default function SignupPage() {
         </p>
 
         {/* Form */}
-        <form className="space-y-4" onSubmit={form.handleSubmit}>
+        <form className="space-y-4">
           {/* Full Name Field */}
           <div>
             <label
@@ -84,8 +89,13 @@ export default function SignupPage() {
               onChange={form.handleChange}
               onBlur={form.handleBlur}
               placeholder="Nom"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
+              data-error={true}
+              className="w-full px-4 py-2 data-[error=false]:border-red-500 data-[error=false]:border-gray-500  border border-gray-300    rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
             />
+
+            <div className="text-red-500 text-xs text-right">
+              {form.errors.nome}
+            </div>
           </div>
 
           {/* Email Field */}
@@ -104,8 +114,12 @@ export default function SignupPage() {
               onChange={form.handleChange}
               onBlur={form.handleBlur}
               placeholder="votre@email.com"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
+              data-error={true}
+              className="w-full px-4 py-2 data-[error=false]:border-red-500 data-[error=false]:border-gray-500  border border-gray-300  rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
             />
+            <div className="text-red-500 text-xs text-right">
+              {form.errors.email}
+            </div>
           </div>
 
           {/* Password Field */}
@@ -124,8 +138,12 @@ export default function SignupPage() {
               onChange={form.handleChange}
               onBlur={form.handleBlur}
               placeholder="••••••••"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
+              data-error={true}
+              className="w-full px-4 py-2   data-[error=false]:border-red-500 data-[error=false]:border-gray-500   border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
             />
+            <div className="text-red-500 text-xs text-right">
+              {form.errors.password}
+            </div>
           </div>
 
           {/* Confirm Password Field */}
@@ -144,18 +162,24 @@ export default function SignupPage() {
               onChange={form.handleChange}
               onBlur={form.handleBlur}
               placeholder="••••••••"
+              data-error={true}
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
             />
+            <div className="text-red-500 text-xs text-right">
+              {form.errors.confirmpassword}
+            </div>
           </div>
 
           {/* Sign Up Button */}
           <button
+            onClick={(e) => {
+              e.preventDefault();
+              form.handleSubmit();
+            }}
             type="submit"
-            disabled={isLoading}
-            className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2.5 px-4 rounded-lg transition-colors duration-200 mt-6"
+            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
           >
-            {isLoading ? "Sinscrire en cours..." : "Sinscrire"}
-            Sinscrire
+            {isLoading ? "S'inscrire en cours..." : "S'inscrire"}
           </button>
         </form>
 
