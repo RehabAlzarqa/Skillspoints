@@ -39,7 +39,7 @@ export default function SignupPage() {
     }),
     onSubmit: async () => {
       setIsLoading(true);
-
+      // fetch here
       setTimeout(() => {
         router.push("/login");
       }, 1000);
