@@ -13,10 +13,11 @@ datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
 }
-// ------------ MODELS ------------
 
-
+//////////////////////////////
 // UTILISATEURS
+//////////////////////////////
+
 model utilisateur {
   id             Int      @id @default(autoincrement())
   name           String?
@@ -25,14 +26,16 @@ model utilisateur {
   totalDesPoints Int      @default(0)
   createdAt      DateTime @default(now())
 
-  // Relations
-  microcours           microCours[]            @relation("UserCreatedCourses")
-  apprentissage        utilisateurMicrocours[]
-  historiqueRecompense historiqueRecompense[]
-  utilisationCodes     utilisationCode[]
+  microcours      microCours[]
+  apprentissage   utilisateurMicrocours[]
+  historique      historiqueRecompense[]
+  utilisationCode utilisationCode[]
 }
 
-// MicroCours
+//////////////////////////////
+// MICRO COURS
+//////////////////////////////
+
 model microCours {
   id          Int      @id @default(autoincrement())
   titre       String
@@ -40,13 +43,16 @@ model microCours {
   createurId  Int
   createdAt   DateTime @default(now())
 
-  createur      utilisateur             @relation("UserCreatedCourses", fields: [createurId], references: [id])
+  createur    utilisateur @relation(fields: [createurId], references: [id])
   apprentissage utilisateurMicrocours[]
 
-  code          Code?   //
+  code          Code?
 }
 
-// Table pivot utilisateur <-> microcours
+//////////////////////////////
+// RELATION utilisateur <-> microCours
+//////////////////////////////
+
 model utilisateurMicrocours {
   id            Int @id @default(autoincrement())
   utilisateurId Int
@@ -56,19 +62,25 @@ model utilisateurMicrocours {
   microcours  microCours  @relation(fields: [microcoursId], references: [id])
 }
 
-// Code pour microcours
-model Code {
-  id               Int      @id @default(autoincrement())
-  valeur           String   @unique
-  maxUtilisations  Int      @default(10)
-  utilisations     Int      @default(0)
-  microcoursId     Int      @unique
+//////////////////////////////
+// CODE
+//////////////////////////////
 
-  microcours       microCours @relation(fields: [microcoursId], references: [id])
+model Code {
+  id              Int    @id @default(autoincrement())
+  valeur          String @unique
+  maxUtilisations Int    @default(10)
+  utilisations    Int    @default(0)
+  microcoursId    Int    @unique
+
+  microcours      microCours @relation(fields: [microcoursId], references: [id])
   utilisationsCode utilisationCode[]
 }
 
-// Utilisation du code
+//////////////////////////////
+// UTILISATION CODE
+//////////////////////////////
+
 model utilisationCode {
   id            Int      @id @default(autoincrement())
   utilisateurId Int
@@ -79,20 +91,26 @@ model utilisationCode {
   code        Code        @relation(fields: [codeId], references: [id])
 }
 
-// Recompense
+//////////////////////////////
+// RECOMPENSE
+//////////////////////////////
+
 model Recompense {
-  id                Int      @id @default(autoincrement())
-  nom               String
-  description       String?
-  points_requis     Int
+  id                 Int      @id @default(autoincrement())
+  nom                String
+  description        String?
+  points_requis      Int
   quantiteDisponible Int?
 
   historique historiqueRecompense[]
 }
 
-// Historique Recompense
+//////////////////////////////
+// HISTORIQUE RECOMPENSE
+//////////////////////////////
+
 model historiqueRecompense {
-  id            Int @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   utilisateurId Int?
   recompenseId  Int
   date          DateTime @default(now())
@@ -100,4 +118,3 @@ model historiqueRecompense {
   utilisateur utilisateur? @relation(fields: [utilisateurId], references: [id])
   recompense  Recompense   @relation(fields: [recompenseId], references: [id])
 }
-
