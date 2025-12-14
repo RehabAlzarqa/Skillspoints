@@ -29,25 +29,18 @@ export default function Page() {
     onSubmit: async () => {
       setIsLoading(true);
 
+      // Simulate login or call API
       setTimeout(() => {
         router.push("/dashboard");
-      });
+      }, 1000);
     },
   });
 
   return (
-    <div className="w-full bg-gradient-to-br from-cyan-100 via-emerald-50 to-pink-100 flex items-center justify-center px-4 min-h-screen">
+    <div className="w-full bg-linear-to-br from-green-200 via-white to-purple-200 flex items-center justify-center px-4 min-h-screen">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-10 text-center">
-        <div className="flex justify-center mb-6">
-          <div className="bg-emerald-500 rounded-2xl w-16 h-16 flex items-center justify-center">
-            <svg
-              className="w-8 h-8 text-white"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1zm0 20c-4.962 0-9-4.038-9-9s4.038-9 9-9 9 4.038 9 9-4.038 9-9 9zm3.5-9c.828 0 1.5-.672 1.5-1.5S16.328 9 15.5 9 14 9.672 14 10.5s.672 1.5 1.5 1.5zm-7 0c.828 0 1.5-.672 1.5-1.5S9.328 9 8.5 9 7 9.672 7 10.5 7.672 12 8.5 12zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.39c.8 2.04 2.78 3.5 5.11 3.5z" />
-            </svg>
-          </div>
+        <div className="w-16 h-16 bg-[#4CAF50] rounded-xl flex items-center justify-center mx-auto mb-4">
+          <BookOpen className="w-10 h-10 text-white" />
         </div>
 
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -56,7 +49,6 @@ export default function Page() {
 
         <p className="text-gray-600 mb-8">Connectez-vous pour continuer</p>
 
-        {/* Form */}
         <form className="space-y-6" onSubmit={form.handleSubmit}>
           {/* Email */}
           <div>
@@ -72,6 +64,7 @@ export default function Page() {
               onBlur={form.handleBlur}
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="votre@email.com"
+              required
             />
 
             {form.touched.email && form.errors.email && (
@@ -84,7 +77,6 @@ export default function Page() {
             <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
               Mot de passe
             </label>
-            {/*  end of Password */}
 
             <input
               type="password"
@@ -94,6 +86,7 @@ export default function Page() {
               onBlur={form.handleBlur}
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
               placeholder="••••••••"
+              required
             />
 
             {form.touched.password && form.errors.password && (
@@ -105,20 +98,19 @@ export default function Page() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
+            className="w-full bg-emerald-600 hover:bg-emerald-700 disabled:bg-emerald-500 text-white font-semibold py-3 rounded-lg transition-colors mt-8"
           >
             {isLoading ? "Connexion en cours..." : "Se connecter"}
           </button>
         </form>
-        {/* end of  Form */}
 
         <div className="m-6 text-center">
-          <Link
-            href="/forgetpassword"
+          <a
+            href="/mot-de-pass-oublié"
             className="text-sm text-[#4CAF50] hover:underline"
           >
-            Mot de passe oublie ?
-          </Link>
+            Mot de passe oublié ?
+          </a>
         </div>
 
         <Link
