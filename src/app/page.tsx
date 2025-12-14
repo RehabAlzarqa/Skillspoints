@@ -1,15 +1,17 @@
+"use client";
+
 import Link from "next/link";
 // homebage my website look like
 export default function Page() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-200 via-white to-purple-200">
+    <div className="min-h-screen bg-gradient-to-br from-cyan-100 via-emerald-50 to-pink-100">
       <nav className="flex justify-between p-4">
         <span className="font-semibold text-lg">SkillsPoints</span>
         <Link
-          href="/login"
+          href="/singup"
           className="bg-gray-50 px-4 py-2 rounded-sm text-gray-600 rounded-xs cursor-pointer border border-gray-300"
         >
-          Se connecter
+          commencer
         </Link>
       </nav>
 
@@ -36,7 +38,7 @@ export default function Page() {
 
           {/* Card 2 */}
           <div className="bg-white rounded-xl shadow-md p-6 max-w-xs flex flex-col items-center text-center transform hover:scale-110 transition group">
-            <div className="w-12 h-12 rounded-full bg-[#E9D5FF] flex items-center justify-center mb-4 transform group-hover:scale-125 transition">
+            <div className="w-12 h-12 rounded-full bg-sky-500 flex items-center justify-center mb-4 transform group-hover:scale-125 transition">
               ⭐
             </div>
             <h3 className="font-semibold mb-2">Système de points</h3>
@@ -48,7 +50,7 @@ export default function Page() {
 
           {/* Card 3 */}
           <div className="bg-white rounded-xl shadow-md p-6 max-w-xs flex flex-col items-center text-center transform hover:scale-110 transition group">
-            <div className="w-12 h-12 rounded-full bg-[#FECACA] flex items-center justify-center mb-4 transform group-hover:scale-125 transition">
+            <div className="w-12 h-12 rounded-full bg-yellow-100 flex items-center justify-center mb-4 transform group-hover:scale-125 transition">
               🎁
             </div>
             <h3 className="font-semibold mb-2">Récompenses</h3>
