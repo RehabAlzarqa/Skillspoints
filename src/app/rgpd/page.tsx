@@ -37,7 +37,7 @@ export default function PolitiqueConfidentialitePage() {
       </p>
       <a
         href="mailto:dpo@skillspoints.com"
-        className="text-[#000000] underline"
+        className="text-[#000000] underline p-2"
       >
         dpo@skillspoints.com
       </a>

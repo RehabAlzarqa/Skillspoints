@@ -8,7 +8,7 @@ export default function Page() {
       <nav className="flex justify-between p-4">
         <span className="font-semibold text-lg">SkillsPoints</span>
         <Link
-          href="/singup"
+          href="/signup"
           className="bg-gray-50 px-4 py-2 rounded-sm text-gray-600 rounded-xs cursor-pointer border border-gray-300"
         >
           commencer
