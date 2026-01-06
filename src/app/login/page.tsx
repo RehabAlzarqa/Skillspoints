@@ -29,9 +29,7 @@ export default function Page() {
     onSubmit: async () => {
       setIsLoading(true);
 
-      setTimeout(() => {
-        router.push("/dashboard");
-      });
+fetch("/api/auth/login");
     },
   });
 
