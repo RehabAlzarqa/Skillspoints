@@ -26,12 +26,31 @@ export default function Page() {
         ),
     }),
 
-    onSubmit: async () => {
+    onSubmit: async (values) => {
       setIsLoading(true);
 
-fetch("/api/auth/login");
+      fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: values.email,
+          password: values.password,
+        }),
+      })
+        .then((res) => res.json()) // ✅ مهم جدًا
+        .then((data) => {
+          // ✅ الآن هذا هو JSON الحقيقي
+          if (data.message === "success") {
+            localStorage.setItem("user", JSON.stringify(data.user));
+            router.push("/dashboard");
+          } else {
+            alert("Email ou mot de passe incorrect");
+          }
+
+          setIsLoading(false);
+        });
     },
-  });
+  }); 
 
   return (
     <div className="w-full bg-gradient-to-br from-cyan-100 via-emerald-50 to-pink-100 flex items-center justify-center px-4 min-h-screen">

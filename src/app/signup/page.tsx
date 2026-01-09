@@ -88,7 +88,7 @@ export default function SignupPage() {
         </p>
 
         {/* Form */}
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={form.handleSubmit}>
           {/* Full Name Field */}
           <div>
             <label
@@ -188,10 +188,6 @@ export default function SignupPage() {
 
           {/* Sign Up Button */}
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              form.handleSubmit();
-            }}
             type="submit"
             className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
           >
