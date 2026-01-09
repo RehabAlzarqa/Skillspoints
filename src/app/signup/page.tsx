@@ -12,40 +12,56 @@ export default function SignupPage() {
   const router = useRouter();
   const form = useFormik({
     initialValues: {
-      nome: "",
+      name: "",
       email: "",
       password: "",
-      confirmpassword: "",
+      confirmPassword: "",
     },
+
     validationSchema: yup.object({
-      nome: yup.string().required("Nome requis"),
+      name: yup.string().required("Nom requis"),
       email: yup
         .string()
         .email("Format email invalide")
         .required("Email requis"),
-      password: yup
+      password: yup.string().required("Mot de passe requis"),
+      confirmPassword: yup
         .string()
-        .matches(
-          /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-          "Le mot de passe doit être fort (8 caractères, majuscule, minuscule, chiffre et symbole)."
-        )
-        .required("Le mot de passe doit être fort"),
-
-      confirmpassword: yup
-        .string()
-        //not understande
         .oneOf([yup.ref("password")], "Les mots de passe ne correspondent pas")
         .required("Veuillez confirmer le mot de passe"),
     }),
-    onSubmit: async () => {
-      setIsLoading(true);
-      // fetch here
-      setTimeout(() => {
+
+    onSubmit: async (values) => {
+      try {
+        setIsLoading(true);
+
+        const res = await fetch("/api/auth/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: values.name,
+            email: values.email,
+            password: values.password,
+            confirmPassword: values.confirmPassword,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          alert(data.error);
+          setIsLoading(false);
+          return;
+        }
+
         router.push("/login");
-      }, 1000);
+      } catch (error) {
+        alert("Erreur serveur");
+      } finally {
+        setIsLoading(false);
+      }
     },
   });
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-100 via-emerald-50 to-pink-100 flex items-center justify-center p-4">
       {/* Signup Form Card */}
@@ -72,20 +88,20 @@ export default function SignupPage() {
         </p>
 
         {/* Form */}
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={form.handleSubmit}>
           {/* Full Name Field */}
           <div>
             <label
               htmlFor="nome"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Nom complet
+              Nom complete
             </label>
             <input
               id="nome"
-              name="nome"
+              name="name"
               type="text"
-              value={form.values.nome}
+              value={form.values.name}
               onChange={form.handleChange}
               onBlur={form.handleBlur}
               placeholder="Nom"
@@ -94,7 +110,7 @@ export default function SignupPage() {
             />
 
             <div className="text-red-500 text-xs text-right">
-              {form.errors.nome}
+              {form.errors.name}
             </div>
           </div>
 
@@ -149,16 +165,16 @@ export default function SignupPage() {
           {/* Confirm Password Field */}
           <div>
             <label
-              htmlFor="confirmpassword"
+              htmlFor="confirmPassword"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
               Confirmer le mot de passe
             </label>
             <input
-              id="confirmpassword"
+              id="confirmPassword"
               type="password"
-              name="confirmpassword"
-              value={form.values.confirmpassword}
+              name="confirmPassword"
+              value={form.values.confirmPassword}
               onChange={form.handleChange}
               onBlur={form.handleBlur}
               placeholder="••••••••"
@@ -166,16 +182,12 @@ export default function SignupPage() {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
             />
             <div className="text-red-500 text-xs text-right">
-              {form.errors.confirmpassword}
+              {form.errors.confirmPassword}
             </div>
           </div>
 
           {/* Sign Up Button */}
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              form.handleSubmit();
-            }}
             type="submit"
             className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
           >
@@ -199,5 +211,3 @@ export default function SignupPage() {
     </div>
   );
 }
-
-
