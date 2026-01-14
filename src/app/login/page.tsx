@@ -28,10 +28,19 @@ export default function Page() {
 
     onSubmit: async () => {
       setIsLoading(true);
-
-      setTimeout(() => {
-        router.push("/dashboard");
+      fetch("/api/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: form.values.email,
+          password: form.values.password,
+          password2: form.values.password,
+        }),
       });
+
+      // setTimeout(() => {
+      // router.push("/dashboard");
+      // });
     },
   });
 
