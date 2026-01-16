@@ -12,7 +12,7 @@ export default function SignupPage() {
   const router = useRouter();
   const form = useFormik({
     initialValues: {
-      nome: "",
+      name: "",
       email: "",
       password: "",
       confirmpassword: "",
@@ -37,12 +37,16 @@ export default function SignupPage() {
         .oneOf([yup.ref("password")], "Les mots de passe ne correspondent pas")
         .required("Veuillez confirmer le mot de passe"),
     }),
+
     onSubmit: async () => {
       setIsLoading(true);
-      // fetch here
-      setTimeout(() => {
-        router.push("/login");
-      }, 1000);
+      fetch("/api/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form.values),
+      });
     },
   });
 
@@ -85,7 +89,7 @@ export default function SignupPage() {
               id="nome"
               name="nome"
               type="text"
-              value={form.values.nome}
+              value={form.values.name}
               onChange={form.handleChange}
               onBlur={form.handleBlur}
               placeholder="Nom"
@@ -94,7 +98,7 @@ export default function SignupPage() {
             />
 
             <div className="text-red-500 text-xs text-right">
-              {form.errors.nome}
+              {form.errors.name}
             </div>
           </div>
 
