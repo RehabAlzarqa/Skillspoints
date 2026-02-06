@@ -1,12 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
-  provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client"
+  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -14,107 +8,82 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-//////////////////////////////
-// UTILISATEURS
-//////////////////////////////
-
 model utilisateur {
-  id             Int      @id @default(autoincrement())
-  name           String?
-  email          String?  @unique
-  motDePasse     String?
-  totalDesPoints Int      @default(0)
-  createdAt      DateTime @default(now())
-
+  id              Int                     @id @default(autoincrement())
+  name            String
+  email           String             @unique
+  motDePasse      String
+  totalDesPoints  Int                     @default(0)
+  createdAt       DateTime                @default(now())
+  historique      historiqueRecompense[]
   microcours      microCours[]
   apprentissage   utilisateurMicrocours[]
-  historique      historiqueRecompense[]
   utilisationCode utilisationCode[]
 }
 
-//////////////////////////////
-// MICRO COURS
-//////////////////////////////
-
 model microCours {
-  id          Int      @id @default(autoincrement())
-  titre       String
-  description String?
-  createurId  Int
-  createdAt   DateTime @default(now())
-
-  createur    utilisateur @relation(fields: [createurId], references: [id])
+  id            Int                     @id @default(autoincrement())
+  titre         String
+  description   String?
+  createurId    Int
+  createdAt     DateTime                @default(now())
+  code          Code?
+  createur      utilisateur             @relation(fields: [createurId], references: [id])
   apprentissage utilisateurMicrocours[]
 
-  code          Code?
+  @@index([createurId], map: "microCours_createurId_fkey")
 }
-
-//////////////////////////////
-// RELATION utilisateur <-> microCours
-//////////////////////////////
 
 model utilisateurMicrocours {
-  id            Int @id @default(autoincrement())
+  id            Int         @id @default(autoincrement())
   utilisateurId Int
   microcoursId  Int
+  microcours    microCours  @relation(fields: [microcoursId], references: [id])
+  utilisateur   utilisateur @relation(fields: [utilisateurId], references: [id])
 
-  utilisateur utilisateur @relation(fields: [utilisateurId], references: [id])
-  microcours  microCours  @relation(fields: [microcoursId], references: [id])
+  @@index([microcoursId], map: "utilisateurMicrocours_microcoursId_fkey")
+  @@index([utilisateurId], map: "utilisateurMicrocours_utilisateurId_fkey")
 }
 
-//////////////////////////////
-// CODE
-//////////////////////////////
-
 model Code {
-  id              Int    @id @default(autoincrement())
-  valeur          String @unique
-  maxUtilisations Int    @default(10)
-  utilisations    Int    @default(0)
-  microcoursId    Int    @unique
-
-  microcours      microCours @relation(fields: [microcoursId], references: [id])
+  id               Int               @id @default(autoincrement())
+  valeur           String            @unique
+  maxUtilisations  Int               @default(10)
+  utilisations     Int               @default(0)
+  microcoursId     Int               @unique
+  microcours       microCours        @relation(fields: [microcoursId], references: [id])
   utilisationsCode utilisationCode[]
 }
 
-//////////////////////////////
-// UTILISATION CODE
-//////////////////////////////
-
 model utilisationCode {
-  id            Int      @id @default(autoincrement())
+  id            Int         @id @default(autoincrement())
   utilisateurId Int
   codeId        Int
-  date          DateTime @default(now())
+  date          DateTime    @default(now())
+  code          Code        @relation(fields: [codeId], references: [id])
+  utilisateur   utilisateur @relation(fields: [utilisateurId], references: [id])
 
-  utilisateur utilisateur @relation(fields: [utilisateurId], references: [id])
-  code        Code        @relation(fields: [codeId], references: [id])
+  @@index([codeId], map: "utilisationCode_codeId_fkey")
+  @@index([utilisateurId], map: "utilisationCode_utilisateurId_fkey")
 }
 
-//////////////////////////////
-// RECOMPENSE
-//////////////////////////////
-
 model Recompense {
-  id                 Int      @id @default(autoincrement())
+  id                 Int                    @id @default(autoincrement())
   nom                String
   description        String?
   points_requis      Int
   quantiteDisponible Int?
-
-  historique historiqueRecompense[]
+  historique         historiqueRecompense[]
 }
 
-//////////////////////////////
-// HISTORIQUE RECOMPENSE
-//////////////////////////////
-
 model historiqueRecompense {
-  id            Int      @id @default(autoincrement())
+  id            Int          @id @default(autoincrement())
   utilisateurId Int?
   recompenseId  Int
-  date          DateTime @default(now())
+  date          DateTime     @default(now())
+  recompense    Recompense   @relation(fields: [recompenseId], references: [id])
+  utilisateur   utilisateur? @relation(fields: [utilisateurId], references: [id])
 
-  utilisateur utilisateur? @relation(fields: [utilisateurId], references: [id])
-  recompense  Recompense   @relation(fields: [recompenseId], references: [id])
+  @@index([recompenseId], map: "historiqueRecompense_recompenseId_fkey")
+  @@index([utilisateurId], map: "historiqueRecompense_utilisateurId_fkey")
 }
