@@ -21,10 +21,8 @@ jobs:
 
       - name: Run tests
         run: npm test
-First, we run npm run coverage to generate the coverage/ folder.
       - name: Generate coverage report
         run: npm run coverage
-       // Then, we use upload-artifact to save the coverage/ folder on GitHub as an artifact.        
 
       - name: Upload coverage artifact
         uses: actions/upload-artifact@v4
