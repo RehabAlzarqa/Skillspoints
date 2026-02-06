@@ -1,6 +1,6 @@
-import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server"
 import bcrypt from "bcryptjs";
+import { prisma } from "@/lib/prisma";
 
 
 
@@ -9,15 +9,17 @@ export async function POST(request:NextRequest){
     const body = await request.json()
     const email = body.email;
     const password = body.password;
+    
     const utilisateur =  await prisma.utilisateur.findUnique({where:{email: email}});
+    return NextResponse.json({
+        message:"User not found"},
+        {status:404}
+    );
+
     if(!utilisateur){
-        return NextResponse.json({
-            message:"User not found"},
-            {status:404}
-        );
     }
 
-const isPasswordCorrect =await bcrypt.compare(password,utilisateur.motDePasse)
+const isPasswordCorrect =await bcrypt.compare(password,utilisateur.motDePasse as string)
 if(!isPasswordCorrect){
     return NextResponse.json(
         { message:"Invalid email or password"},

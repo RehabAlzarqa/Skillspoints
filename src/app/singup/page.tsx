@@ -18,7 +18,7 @@ export default function SignupPage() {
       confirmpassword: "",
     },
     validationSchema: yup.object({
-      nome: yup.string().required("Nome requis"),
+      name: yup.string().required("name requis"),
       email: yup
         .string()
         .email("Format email invalide")
@@ -45,7 +45,11 @@ export default function SignupPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(form.values),
+        body: JSON.stringify({
+          name: form.values.name,
+          email: form.values.email,
+          password: form.values.password,
+        }),
       });
     },
   });
@@ -86,13 +90,13 @@ export default function SignupPage() {
               Nom complet
             </label>
             <input
-              id="nome"
-              name="nome"
+              id="name"
+              name="name"
               type="text"
               value={form.values.name}
               onChange={form.handleChange}
               onBlur={form.handleBlur}
-              placeholder="Nom"
+              placeholder="name"
               data-error={true}
               className="w-full px-4 py-2 data-[error=false]:border-red-500 data-[error=false]:border-gray-500  border border-gray-300    rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
             />
