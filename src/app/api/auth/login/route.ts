@@ -45,15 +45,14 @@ export async function POST(request: Request) {
       {
         message: "success",
         user: {
-          id: utilisateur.id,
-          name: utilisateur.name,
+          id: utilisateur.idUtilisateur,
+          name: utilisateur.nom,
           email: utilisateur.email,
-          totalDesPoints: utilisateur.totalDesPoints
+          totalPoints: utilisateur.totalPoints
         }
       },
       { status: 200 }
     );
-
   } catch (error) {
     console.error("LOGIN_ERROR:", error);
     return NextResponse.json(

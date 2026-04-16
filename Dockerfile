@@ -15,7 +15,11 @@ RUN npm install
 # Copy all files
 COPY . .
 
+# prisma generate
+
+RUN npx prisma generate
 # Build Next.js app
+
 RUN npm run build
 
 # Expose port

@@ -40,18 +40,17 @@ export async function POST(request: Request) {
     // ✅ save user
     const utilisateur = await prisma.utilisateur.create({
       data: {
-        name: name || null,
+        nom: name || "", // أو بدون || إذا متأكدة
         email,
         motDePasse: hashedPassword,
-        totalDesPoints: 0
-      },
+        totalPoints: 0
+      }
     });
-
-    // ✅ response
+        // ✅ response
     return NextResponse.json(
       {
         message: "Utilisateur créé avec succès",
-        utilisateurId: utilisateur.id,
+        utilisateurId: utilisateur.idUtilisateur,
       },
       { status: 201 }
     );
