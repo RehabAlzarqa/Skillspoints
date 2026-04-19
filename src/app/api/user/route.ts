@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
 export async function GET() {
-  const utilisateurs = await prisma.utilisateur.findMany();
+  const utilisateurs = await prisma.user.findMany();
   return NextResponse.json(utilisateurs);
 }
 
@@ -13,11 +13,11 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: "Name and email are required" }, { status: 400 });
   }
  
-  const user = await prisma.utilisateur.create({
+  const user = await prisma.user.create({
     data: {
       name,
       email,
-      motDePasse: "defaultPassword", // Replace with appropriate logic to generate or retrieve a password
+      password: "defaultPassword", // Replace with appropriate logic to generate or retrieve a password
       totalPoints: 0, // Set an initial value for totalPoints
     },
   });
