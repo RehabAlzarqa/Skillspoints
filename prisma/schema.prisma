@@ -1,12 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -14,107 +7,17 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-//////////////////////////////
-// UTILISATEURS
-//////////////////////////////
+model MicroCourse {
+  id            BigInt  @id @unique(map: "id") @default(autoincrement()) @db.UnsignedBigInt
+  idMicroCourse Int?
+  title         String? @db.Text
 
-model utilisateur {
-  id             Int      @id @default(autoincrement())
-  name           String?
-  email          String?  @unique
-  motDePasse     String?
-  totalDesPoints Int      @default(0)
-  createdAt      DateTime @default(now())
-
-  microcours      microCours[]
-  apprentissage   utilisateurMicrocours[]
-  historique      historiqueRecompense[]
-  utilisationCode utilisationCode[]
 }
 
-//////////////////////////////
-// MICRO COURS
-//////////////////////////////
-
-model microCours {
-  id          Int      @id @default(autoincrement())
-  titre       String
-  description String?
-  createurId  Int
-  createdAt   DateTime @default(now())
-
-  createur    utilisateur @relation(fields: [createurId], references: [id])
-  apprentissage utilisateurMicrocours[]
-
-  code          Code?
-}
-
-//////////////////////////////
-// RELATION utilisateur <-> microCours
-//////////////////////////////
-
-model utilisateurMicrocours {
-  id            Int @id @default(autoincrement())
-  utilisateurId Int
-  microcoursId  Int
-
-  utilisateur utilisateur @relation(fields: [utilisateurId], references: [id])
-  microcours  microCours  @relation(fields: [microcoursId], references: [id])
-}
-
-//////////////////////////////
-// CODE
-//////////////////////////////
-
-model Code {
-  id              Int    @id @default(autoincrement())
-  valeur          String @unique
-  maxUtilisations Int    @default(10)
-  utilisations    Int    @default(0)
-  microcoursId    Int    @unique
-
-  microcours      microCours @relation(fields: [microcoursId], references: [id])
-  utilisationsCode utilisationCode[]
-}
-
-//////////////////////////////
-// UTILISATION CODE
-//////////////////////////////
-
-model utilisationCode {
-  id            Int      @id @default(autoincrement())
-  utilisateurId Int
-  codeId        Int
-  date          DateTime @default(now())
-
-  utilisateur utilisateur @relation(fields: [utilisateurId], references: [id])
-  code        Code        @relation(fields: [codeId], references: [id])
-}
-
-//////////////////////////////
-// RECOMPENSE
-//////////////////////////////
-
-model Recompense {
-  id                 Int      @id @default(autoincrement())
-  nom                String
-  description        String?
-  points_requis      Int
-  quantiteDisponible Int?
-
-  historique historiqueRecompense[]
-}
-
-//////////////////////////////
-// HISTORIQUE RECOMPENSE
-//////////////////////////////
-
-model historiqueRecompense {
-  id            Int      @id @default(autoincrement())
-  utilisateurId Int?
-  recompenseId  Int
-  date          DateTime @default(now())
-
-  utilisateur utilisateur? @relation(fields: [utilisateurId], references: [id])
-  recompense  Recompense   @relation(fields: [recompenseId], references: [id])
+model User {
+  id          Int    @id @default(autoincrement())
+  name        String
+  email       String @unique
+  password    String
+  totalPoints Int    @default(0)
 }
