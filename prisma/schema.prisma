@@ -3,15 +3,13 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = "postgresql://postgres.fgnpodswhjyktkjblcon:Dev@2025Dev@202@aws-0-eu-west-1.pooler.supabase.com:5432/postgres"
 }
-
 model MicroCourse {
-  id            BigInt  @id @unique(map: "id") @default(autoincrement()) @db.UnsignedBigInt
-  idMicroCourse Int?
-  title         String? @db.Text
-
+  id          Int    @id @default(autoincrement())
+  title       String
+  description String
 }
 
 model User {
