@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import bcrypt from "bcrypt";
 
-export async function POST(request: Request) {
+export async function POST(req: Request) {
   try {
     // 1️⃣ قراءة البيانات
-    const { email, password } = await request.json();
+    const { email, password } = await req.json();
 
     // 2️⃣ تحقق مبدئي
     if (!email || !password) {
@@ -17,11 +17,11 @@ export async function POST(request: Request) {
 
 
     // 3️⃣ جلب المستخدم
-    const utilisateur = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { email }
     });
 
-    if (!utilisateur || !utilisateur.password) {
+    if (!user.email || !user.password) {
       return NextResponse.json(
         { message: "المستخدم غير موجود" },
         { status: 401 }
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     // 4️⃣ مقارنة كلمة المرور
     const isValid = await bcrypt.compare(
       password,
-      utilisateur.password
+      user.password
     );
 
     if (!isValid) {
@@ -46,10 +46,8 @@ export async function POST(request: Request) {
       {
         message: "success",
         user: {
-          id: utilisateur.id,
-          name: utilisateur.name,
-          email: utilisateur.email,
-          totalPoints: utilisateur.totalPoints
+          name: user.name,
+          email: user.email,
         }
       },
       { status: 200 }
@@ -57,7 +55,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error("LOGIN_ERROR:", error);
     return NextResponse.json(
-      { message: "خطأ في السيرفر" },
+      { message: "error " },
       { status: 500 }
     );
   }

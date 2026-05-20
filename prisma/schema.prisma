@@ -3,19 +3,66 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = "postgresql://postgres.fgnpodswhjyktkjblcon:Dev@2025Dev@202@aws-0-eu-west-1.pooler.supabase.com:5432/postgres"
-}
-model MicroCourse {
-  id          Int    @id @default(autoincrement())
-  title       String
-  description String
+  provider = "postgresql"
+  url      = env("DATABASE.URL")
 }
 
 model User {
-  id          Int    @id @default(autoincrement())
-  name        String
-  email       String @unique
-  password    String
-  totalPoints Int    @default(0)
+  idUser        Int      @id @default(autoincrement())
+  name          String
+  email         String   @unique
+  password      String
+  totalPoints   Int
+  createdAt     DateTime @default(now())
+
+  microCourses       MicroCourse[]
+  learnings          Learning[]
+  rewardHistory      RewardHistory[]
+}
+
+model MicroCourse {
+  idMicroCourse Int      @id @default(autoincrement())
+  title         String
+  description   String?
+  createdAt     DateTime @default(now())
+
+  creatorId Int
+  creator   User @relation(fields: [creatorId], references: [idUser])
+
+  learnings Learning[]
+}
+
+model Learning {
+  idLearning Int @id @default(autoincrement())
+
+  userId        Int
+  microCourseId Int
+
+  user        User        @relation(fields: [userId], references: [idUser])
+  microCourse MicroCourse @relation(fields: [microCourseId], references: [idMicroCourse])
+
+  startDate DateTime @default(now())
+  status    String
+}
+
+model Reward {
+  idReward           Int    @id @default(autoincrement())
+  name               String
+  description        String?
+  requiredPoints     Int
+  availableQuantity  Int?
+
+  rewardHistory RewardHistory[]
+}
+
+model RewardHistory {
+  idHistory Int @id @default(autoincrement())
+
+  userId   Int
+  rewardId Int
+
+  user   User   @relation(fields: [userId], references: [idUser])
+  reward Reward @relation(fields: [rewardId], references: [idReward])
+
+  obtainedAt DateTime @default(now())
 }
