@@ -1,30 +1,117 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
-export async function GET() {
-  const user = await prisma.user.findMany();
-  return NextResponse.json(user);
-}
 
-export async function POST(request: Request) {
-  const { name, email } = await request.json();
+// ? Steps
+// 1. Read Request
+// 2. Validate Data
+// 3. Check Database
+// 6. Return Response
+// 7. Handle Errors
+// // ? Steps
 
-  if (!name || !email) {
-    return NextResponse.json({ message: "Name and email are required" }, { status: 400 });
-  }
- 
-  const user = await prisma.user.create({
-    data: {
-      name,
-      email,
-      password: "defaultPassword", // Replace with appropriate logic to generate or retrieve a password
-      totalPoints: 0, // Set an initial value for totalPoints
-    },
+
+ export async function POST(request: NextRequest) {
+// 1. Read Request
+
+const body =  await request.json();
+const { name ,email, password} = body;
+// 1. Read Request
+
+// 2. Validate Data
+
+if (!name) {
+  return NextResponse.json({
+    msg: "name is required"
   });
-
-  //HERE you can add logic to save the user data to a database or perform other operations
-  return NextResponse.json({ message: "User created successfully", user: { 
-    name: user.name,
-    email: user.email
-   } });
 }
+
+
+if (!email) {
+  return NextResponse.json({
+    msg: "Email is required"
+  });
+}
+
+if (!email.includes("@")) {
+  return NextResponse.json({
+    msg: "Invalid email"
+  });
+}
+
+if (!password) {
+  return NextResponse.json({
+    msg: "Password is required"
+  });
+}
+
+if (password.length < 8) {
+  return NextResponse.json({
+    msg: "Password must be at least 8 characters"
+  });
+}// 2. Validate Data
+
+// 3. Check Database
+const existingUser =  await prisma.user.findUnique({
+  where: {email}
+});
+
+if (existingUser) {
+  return NextResponse.json({
+    msg:"User already exists"
+  })
+}
+
+// 3. Check Database
+
+// Create data
+const newUser =  await prisma.user.create({
+  data:{
+     name,
+    email,
+    password,
+    totalPoints: 0
+  }
+})
+
+
+
+  return NextResponse.json({
+    meg: "Api route is ready"
+  });
+  
+}
+
+
+
+
+
+
+
+// export async function GET() {
+//   const user = await prisma.user.findMany();
+//   return NextResponse.json(user);
+// }
+
+// export async function POST(request: Request) {
+//   const { name, email } = await request.json();
+
+//   if (!name || !email) {
+//     return NextResponse.json({ message: "Name and email are required" }, { status: 400 });
+//   }
+ 
+//   const user = await prisma.user.create({
+//     data: {
+//       name,
+//       email,
+//       password: "defaultPassword", // Replace with appropriate logic to generate or retrieve a password
+//       totalPoints: 0, // Set an initial value for totalPoints
+//     },
+//   });
+
+//   //HERE you can add logic to save the user data to a database or perform other operations
+//   return NextResponse.json({ message: "User created successfully", user: { 
+//     name: user.name,
+//     email: user.email
+//    } });
+// }

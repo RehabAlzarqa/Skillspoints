@@ -4,65 +4,56 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE.URL")
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  idUser        Int      @id @default(autoincrement())
   name          String
-  email         String   @unique
+  email         String          @unique
   password      String
   totalPoints   Int
-  createdAt     DateTime @default(now())
-
-  microCourses       MicroCourse[]
-  learnings          Learning[]
-  rewardHistory      RewardHistory[]
-}
-
-model MicroCourse {
-  idMicroCourse Int      @id @default(autoincrement())
-  title         String
-  description   String?
-  createdAt     DateTime @default(now())
-
-  creatorId Int
-  creator   User @relation(fields: [creatorId], references: [idUser])
-
-  learnings Learning[]
-}
-
-model Learning {
-  idLearning Int @id @default(autoincrement())
-
-  userId        Int
-  microCourseId Int
-
-  user        User        @relation(fields: [userId], references: [idUser])
-  microCourse MicroCourse @relation(fields: [microCourseId], references: [idMicroCourse])
-
-  startDate DateTime @default(now())
-  status    String
-}
-
-model Reward {
-  idReward           Int    @id @default(autoincrement())
-  name               String
-  description        String?
-  requiredPoints     Int
-  availableQuantity  Int?
-
+  createdAt     DateTime        @default(now())
+  idUser        Int             @id @default(autoincrement())
+  learnings     Learning[]
+  microCourses  MicroCourse[]
   rewardHistory RewardHistory[]
 }
 
+model MicroCourse {
+  title         String
+  description   String?
+  createdAt     DateTime   @default(now())
+  creatorId     Int
+  idMicroCourse Int        @id @default(autoincrement())
+  learnings     Learning[]
+  creator       User       @relation(fields: [creatorId], references: [idUser])
+}
+
+model Learning {
+  idLearning    Int         @id @default(autoincrement())
+  userId        Int
+  microCourseId Int
+  startDate     DateTime    @default(now())
+  status        String
+  microCourse   MicroCourse @relation(fields: [microCourseId], references: [idMicroCourse])
+  user          User        @relation(fields: [userId], references: [idUser])
+}
+
 model RewardHistory {
-  idHistory Int @id @default(autoincrement())
-
-  userId   Int
-  rewardId Int
-
-  user   User   @relation(fields: [userId], references: [idUser])
-  reward Reward @relation(fields: [rewardId], references: [idReward])
-
+  idHistory  Int      @id @default(autoincrement())
+  userId     Int
+  rewardId   Int
   obtainedAt DateTime @default(now())
+  reward     Reward   @relation(fields: [rewardId], references: [idReward])
+  user       User     @relation(fields: [userId], references: [idUser])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Reward {
+  idReward          Int             @id @default(autoincrement())
+  name              String
+  description       String?
+  requiredPoints    Int
+  availableQuantity Int?
+  rewardHistory     RewardHistory[]
 }

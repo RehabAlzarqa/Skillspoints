@@ -14,3 +14,17 @@ type MicroCourse = {
     createdAt:string;
     creatorId: number;
 }
+
+type Learning = {
+
+}
+
+
+type Reward = {
+
+}
+
+
+type RewardHistory = {
+    
+}

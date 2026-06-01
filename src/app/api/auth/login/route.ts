@@ -4,10 +4,12 @@ import bcrypt from "bcrypt";
 
 export async function POST(req: Request) {
   try {
-    // 1️⃣ قراءة البيانات
+    // read data
+    const body =  await req.json();
     const { email, password } = await req.json();
+    // read data
 
-    // 2️⃣ تحقق مبدئي
+    // validation
     if (!email || !password) {
       return NextResponse.json(
         { message: "all fields are required" },
@@ -16,14 +18,15 @@ export async function POST(req: Request) {
     }
 
 
-    // 3️⃣ جلب المستخدم
+    // create the post request
     const user = await prisma.user.findUnique({
       where: { email }
+      
     });
 
     if (!user.email || !user.password) {
       return NextResponse.json(
-        { message: "المستخدم غير موجود" },
+        { message: "user  not exist" },
         { status: 401 }
       ); 
     }
@@ -36,7 +39,7 @@ export async function POST(req: Request) {
 
     if (!isValid) {
       return NextResponse.json(
-        { message: "كلمة المرور غير صحيحة" },
+        { message: "password not matching" },
         { status: 401 }
       );
     }
