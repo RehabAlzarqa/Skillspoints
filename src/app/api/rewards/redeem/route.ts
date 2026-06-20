@@ -1,6 +1,8 @@
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
+// User wants to exchange points for a reward
+
 export async function POST(request: NextRequest) {
 
   // 1. Read request

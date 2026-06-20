@@ -11,6 +11,12 @@ import prisma from "@/lib/prisma";
 // // ? Steps
 
 
+export async function GET() {
+  const users = await prisma.user.findMany();
+
+  return NextResponse.json(users);
+}
+
  export async function POST(request: NextRequest) {
 // 1. Read Request
 
@@ -88,30 +94,3 @@ const newUser =  await prisma.user.create({
 
 
 
-// export async function GET() {
-//   const user = await prisma.user.findMany();
-//   return NextResponse.json(user);
-// }
-
-// export async function POST(request: Request) {
-//   const { name, email } = await request.json();
-
-//   if (!name || !email) {
-//     return NextResponse.json({ message: "Name and email are required" }, { status: 400 });
-//   }
- 
-//   const user = await prisma.user.create({
-//     data: {
-//       name,
-//       email,
-//       password: "defaultPassword", // Replace with appropriate logic to generate or retrieve a password
-//       totalPoints: 0, // Set an initial value for totalPoints
-//     },
-//   });
-
-//   //HERE you can add logic to save the user data to a database or perform other operations
-//   return NextResponse.json({ message: "User created successfully", user: { 
-//     name: user.name,
-//     email: user.email
-//    } });
-// }
