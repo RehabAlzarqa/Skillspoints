@@ -1,17 +1,17 @@
-import { PrismaClient } from '../src/generated/prisma'; 
+import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 async function main() {
   console.log("🌱 Prisma seed (TS) started...");
-  
- await prisma.utilisateur.create({
+
+  await prisma.user.create({
     data: {
       name: "Test User",
-     email: "test@example.com",
-      motDePasse: "hashed-password",
-   },
-   });
+      email: "test@example.com",
+      password: "hashed-password",
+    },
+  });
 
   console.log("🌱 Seed completed (no data added).");
 }

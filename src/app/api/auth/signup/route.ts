@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     }
 
     // ✅ check if email exists
-    const existingUser = await prisma.utilisateur.findUnique({
+    const existingUser = await prisma.user.findUnique({
       where: { email },
     });
 
@@ -38,11 +38,11 @@ export async function POST(request: Request) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // ✅ save user
-    const utilisateur = await prisma.utilisateur.create({
+    const utilisateur = await prisma.user.create({
       data: {
-        nom: name || "", // أو بدون || إذا متأكدة
+        name: name || "",
         email,
-        motDePasse: hashedPassword,
+        password: hashedPassword,
         totalPoints: 0
       }
     });
@@ -50,7 +50,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         message: "Utilisateur créé avec succès",
-        utilisateurId: utilisateur.idUtilisateur,
+        utilisateurId: utilisateur.id,
       },
       { status: 201 }
     );

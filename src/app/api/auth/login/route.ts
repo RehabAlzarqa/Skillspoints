@@ -16,11 +16,11 @@ export async function POST(request: Request) {
     }
 
     // 3️⃣ جلب المستخدم
-    const utilisateur = await prisma.utilisateur.findUnique({
+    const utilisateur = await prisma.user.findUnique({
       where: { email }
     });
 
-    if (!utilisateur || !utilisateur.motDePasse) {
+    if (!utilisateur || !utilisateur.password) {
       return NextResponse.json(
         { message: "المستخدم غير موجود" },
         { status: 401 }
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     // 4️⃣ مقارنة كلمة المرور
     const isValid = await bcrypt.compare(
       password,
-      utilisateur.motDePasse
+      utilisateur.password
     );
 
     if (!isValid) {
@@ -45,8 +45,8 @@ export async function POST(request: Request) {
       {
         message: "success",
         user: {
-          id: utilisateur.idUtilisateur,
-          name: utilisateur.nom,
+          id: utilisateur.id,
+          name: utilisateur.name,
           email: utilisateur.email,
           totalPoints: utilisateur.totalPoints
         }

@@ -33,9 +33,17 @@ export const POST = async (request: NextRequest) => {
   }
 
   // check if the microcours already exist
-  const courseAlreadyExist = await prisma.microCourse.findUnique({ where: { title: titre } });
-  
-  
+  const courseAlreadyExist = await prisma.microCourse.findFirst({ where: { title: titre } });
+
+  if (courseAlreadyExist) {
+    return NextResponse.json({ msg: 'Course already exists!' }, { status: 400 });
+  }
+
+  const newCourse = await prisma.microCourse.create({
+    data: { title: titre },
+  });
+
+  return NextResponse.json(newCourse, { status: 201 });
 }
 
 

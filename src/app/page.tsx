@@ -7,12 +7,20 @@ export default function Page() {
     <div className="min-h-screen bg-gradient-to-br from-cyan-100 via-emerald-50 to-pink-100">
       <nav className="flex justify-between p-4">
         <span className="font-semibold text-lg">SkillsPoints</span>
-        <Link
-          href="/signup"
-          className="bg-gray-50 px-4 py-2 rounded-sm text-gray-600 rounded-xs cursor-pointer border border-gray-300"
-        >
-          commencer
-        </Link>
+        <div className="flex items-center gap-3">
+          <Link
+            href="/dashboard"
+            className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-xl text-sm transition shadow-md shadow-blue-500/20"
+          >
+            Accéder à l&apos;application
+          </Link>
+          <Link
+            href="/signup"
+            className="bg-gray-50 px-4 py-2 text-gray-600 rounded-xl cursor-pointer border border-gray-300 text-sm font-semibold hover:bg-gray-100 transition"
+          >
+            Commencer
+          </Link>
+        </div>
       </nav>
 
       <div className="flex flex-col items-center justify-center min-h-[80vh] text-center gap-4 px-4">
