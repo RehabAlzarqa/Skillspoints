@@ -2,8 +2,8 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 
 export async function GET() {
-  const utilisateurs = await prisma.user.findMany();
-  return NextResponse.json(utilisateurs);
+  const users = await prisma.user.findMany();
+  return NextResponse.json(users);
 }
 
 export async function POST(request: Request) {
@@ -17,14 +17,16 @@ export async function POST(request: Request) {
     data: {
       name,
       email,
-      password: "defaultPassword", // Replace with appropriate logic to generate or retrieve a password
-      totalPoints: 0, // Set an initial value for totalPoints
+      password: "defaultPassword",
+      totalPoints: 0,
     },
   });
 
-  //HERE you can add logic to save the user data to a database or perform other operations
-  return NextResponse.json({ message: "User created successfully", user: { 
-    name: user.name,
-    email: user.email
-   } });
+  return NextResponse.json({
+    message: "User created successfully",
+    user: { 
+      name: user.name,
+      email: user.email,
+    },
+  });
 }

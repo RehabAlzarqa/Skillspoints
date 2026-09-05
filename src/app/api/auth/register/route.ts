@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
   try {
     const { name, email, password, confirmPassword } = await request.json();
 
-    // ✅ validation
+    // Validation
     if (!email || !password || !confirmPassword) {
       return NextResponse.json(
         { error: "All fields are required" },
@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // ✅ confirm password
+    // Confirm password
     if (password !== confirmPassword) {
       return NextResponse.json(
         { error: "Passwords do not match" },
@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // ✅ check if email exists
+    // Check if email exists
     const existingUser = await prisma.user.findUnique({
       where: { email },
     });
@@ -34,11 +34,11 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // ✅ hash password
+    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // ✅ save user
-    const utilisateur = await prisma.user.create({
+    // Save user
+    const newUser = await prisma.user.create({
       data: {
 <<<<<<< HEAD:src/app/api/auth/register/route.ts
         name: name || "", // أو بدون || إذا متأكدة
@@ -47,18 +47,18 @@ export async function POST(request: NextRequest) {
 >>>>>>> 8b8cf61a0fe35d4394e5c435a47f308a5fd2176a:src/app/api/auth/signup/route.ts
         email,
         password: hashedPassword,
-        totalPoints: 0
-      }
+        totalPoints: 0,
+      },
     });
-        // ✅ response
+
+    // Response
     return NextResponse.json(
       {
-        message: "Utilisateur créé avec succès",
-        utilisateurId: utilisateur.id,
+        message: "User created successfully",
+        userId: newUser.id,
       },
       { status: 201 }
     );
-
   } catch (error) {
     console.error("SIGNUP ERROR", error);
     return NextResponse.json(
@@ -67,3 +67,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
