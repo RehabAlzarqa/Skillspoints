@@ -4,60 +4,58 @@ import bcrypt from "bcrypt";
 
 export async function POST(request: Request) {
   try {
-    // 1️⃣ قراءة البيانات
+    // 1️⃣ Parse request body
     const { email, password } = await request.json();
 
-    // 2️⃣ تحقق مبدئي
+    // 2️⃣ Initial validation
     if (!email || !password) {
       return NextResponse.json(
-        { message: "معلومات ناقصة" },
+        { message: "Missing email or password" },
         { status: 400 }
       );
     }
 
-    // 3️⃣ جلب المستخدم
-    const utilisateur = await prisma.user.findUnique({
-      where: { email }
+    // 3️⃣ Fetch user
+    const user = await prisma.user.findUnique({
+      where: { email },
     });
 
-    if (!utilisateur || !utilisateur.password) {
+    if (!user || !user.password) {
       return NextResponse.json(
-        { message: "المستخدم غير موجود" },
+        { message: "User not found" },
         { status: 401 }
       );
     }
 
-    // 4️⃣ مقارنة كلمة المرور
-    const isValid = await bcrypt.compare(
-      password,
-      utilisateur.password
-    );
+    // 4️⃣ Verify password
+    const isValid = await bcrypt.compare(password, user.password);
 
     if (!isValid) {
       return NextResponse.json(
-        { message: "كلمة المرور غير صحيحة" },
+        { message: "Incorrect password" },
         { status: 401 }
       );
     }
 
-    // 5️⃣ نجاح تسجيل الدخول
+    // 5️⃣ Successful login response
     return NextResponse.json(
       {
         message: "success",
         user: {
-          id: utilisateur.id,
-          name: utilisateur.name,
-          email: utilisateur.email,
-          totalPoints: utilisateur.totalPoints
-        }
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          totalPoints: user.totalPoints,
+        },
       },
       { status: 200 }
     );
   } catch (error) {
     console.error("LOGIN_ERROR:", error);
     return NextResponse.json(
-      { message: "خطأ في السيرفر" },
+      { message: "Internal server error" },
       { status: 500 }
     );
   }
 }
+

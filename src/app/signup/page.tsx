@@ -1,15 +1,15 @@
 "use client";
 
-import { useFormik, validateYupSchema } from "formik";
-// next navigation always
+import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import * as yup from "yup";
+import Link from "next/link";
 
 export default function SignupPage() {
   const [isLoading, setIsLoading] = useState(false);
-
   const router = useRouter();
+
   const form = useFormik({
     initialValues: {
       name: "",
@@ -19,16 +19,16 @@ export default function SignupPage() {
     },
 
     validationSchema: yup.object({
-      name: yup.string().required("Nom requis"),
+      name: yup.string().required("Full name is required"),
       email: yup
         .string()
-        .email("Format email invalide")
-        .required("Email requis"),
-      password: yup.string().required("Mot de passe requis"),
+        .email("Invalid email format")
+        .required("Email is required"),
+      password: yup.string().required("Password is required"),
       confirmPassword: yup
         .string()
-        .oneOf([yup.ref("password")], "Les mots de passe ne correspondent pas")
-        .required("Veuillez confirmer le mot de passe"),
+        .oneOf([yup.ref("password")], "Passwords do not match")
+        .required("Please confirm your password"),
     }),
 
     onSubmit: async (values) => {
@@ -49,26 +49,27 @@ export default function SignupPage() {
         const data = await res.json();
 
         if (!res.ok) {
-          alert(data.error);
+          alert(data.error || "Signup failed");
           setIsLoading(false);
           return;
         }
 
         router.push("/login");
       } catch (error) {
-        alert("Erreur serveur");
+        alert("Server error. Please try again.");
       } finally {
         setIsLoading(false);
       }
     },
   });
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-cyan-100 via-emerald-50 to-pink-100 flex items-center justify-center p-4">
       {/* Signup Form Card */}
-      <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
+      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
         {/* Logo Icon */}
         <div className="flex justify-center mb-6">
-          <div className="bg-emerald-500 rounded-2xl w-16 h-16 flex items-center justify-center">
+          <div className="bg-emerald-500 rounded-2xl w-16 h-16 flex items-center justify-center shadow-lg shadow-emerald-500/20">
             <svg
               className="w-8 h-8 text-white"
               fill="currentColor"
@@ -81,10 +82,10 @@ export default function SignupPage() {
 
         {/* Heading */}
         <h1 className="text-2xl font-bold text-center text-gray-900 mb-2">
-          Rejoignez Skillspoints
+          Join SkillsPoints
         </h1>
         <p className="text-center text-gray-600 text-sm mb-6">
-          Créez votre compte pour commencer
+          Create your account to get started
         </p>
 
         {/* Form */}
@@ -92,26 +93,27 @@ export default function SignupPage() {
           {/* Full Name Field */}
           <div>
             <label
-              htmlFor="nome"
+              htmlFor="name"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Nom complete
+              Full Name
             </label>
             <input
-              id="nome"
+              id="name"
               name="name"
               type="text"
               value={form.values.name}
               onChange={form.handleChange}
               onBlur={form.handleBlur}
-              placeholder="Nom"
-              data-error={true}
-              className="w-full px-4 py-2 data-[error=false]:border-red-500 data-[error=false]:border-gray-500  border border-gray-300    rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
+              placeholder="John Doe"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 placeholder-gray-400 text-sm"
             />
 
-            <div className="text-red-500 text-xs text-right">
-              {form.errors.name}
-            </div>
+            {form.touched.name && form.errors.name && (
+              <div className="text-red-500 text-xs mt-1 text-left">
+                {form.errors.name}
+              </div>
+            )}
           </div>
 
           {/* Email Field */}
@@ -129,13 +131,14 @@ export default function SignupPage() {
               value={form.values.email}
               onChange={form.handleChange}
               onBlur={form.handleBlur}
-              placeholder="votre@email.com"
-              data-error={true}
-              className="w-full px-4 py-2 data-[error=false]:border-red-500 data-[error=false]:border-gray-500  border border-gray-300  rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
+              placeholder="your@email.com"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 placeholder-gray-400 text-sm"
             />
-            <div className="text-red-500 text-xs text-right">
-              {form.errors.email}
-            </div>
+            {form.touched.email && form.errors.email && (
+              <div className="text-red-500 text-xs mt-1 text-left">
+                {form.errors.email}
+              </div>
+            )}
           </div>
 
           {/* Password Field */}
@@ -144,7 +147,7 @@ export default function SignupPage() {
               htmlFor="password"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Mot de passe
+              Password
             </label>
             <input
               id="password"
@@ -154,12 +157,13 @@ export default function SignupPage() {
               onChange={form.handleChange}
               onBlur={form.handleBlur}
               placeholder="••••••••"
-              data-error={true}
-              className="w-full px-4 py-2   data-[error=false]:border-red-500 data-[error=false]:border-gray-500   border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 placeholder-gray-400 text-sm"
             />
-            <div className="text-red-500 text-xs text-right">
-              {form.errors.password}
-            </div>
+            {form.touched.password && form.errors.password && (
+              <div className="text-red-500 text-xs mt-1 text-left">
+                {form.errors.password}
+              </div>
+            )}
           </div>
 
           {/* Confirm Password Field */}
@@ -168,7 +172,7 @@ export default function SignupPage() {
               htmlFor="confirmPassword"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Confirmer le mot de passe
+              Confirm Password
             </label>
             <input
               id="confirmPassword"
@@ -178,36 +182,39 @@ export default function SignupPage() {
               onChange={form.handleChange}
               onBlur={form.handleBlur}
               placeholder="••••••••"
-              data-error={true}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 placeholder-gray-400 text-sm"
             />
-            <div className="text-red-500 text-xs text-right">
-              {form.errors.confirmPassword}
-            </div>
+            {form.touched.confirmPassword && form.errors.confirmPassword && (
+              <div className="text-red-500 text-xs mt-1 text-left">
+                {form.errors.confirmPassword}
+              </div>
+            )}
           </div>
 
           {/* Sign Up Button */}
           <button
             type="submit"
-            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
+            disabled={isLoading}
+            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 rounded-lg transition-colors duration-200 cursor-pointer shadow-md shadow-emerald-500/20"
           >
-            {isLoading ? "S'inscrire en cours..." : "S'inscrire"}
+            {isLoading ? "Signing up..." : "Sign Up"}
           </button>
         </form>
 
         {/* Login Link */}
         <div className="text-center mt-6">
           <p className="text-gray-600 text-sm">
-            Vous avez déjà un compte?{" "}
-            <a
+            Already have an account?{" "}
+            <Link
               href="/login"
-              className="text-green-500 hover:text-green-600 font-medium"
+              className="text-emerald-600 hover:underline font-semibold"
             >
-              Se connecter
-            </a>
+              Sign In
+            </Link>
           </p>
         </div>
       </div>
     </div>
   );
 }
+

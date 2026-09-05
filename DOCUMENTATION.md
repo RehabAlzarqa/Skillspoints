@@ -1,149 +1,121 @@
-# Documentation du projet Skillspoints RNCP
+# SkillsPoints Project Documentation
 
-## 1️⃣ Initialisation du projet
-- Création du projet Next.js avec tous les fichiers nécessaires :
+## 1️⃣ Project Initialization
+- Creation of the Next.js project with all required configuration files:
   - `package.json`
   - `next.config.mjs`
   - `src/`
   - `public/`
-  - etc.
-- Installation des dépendances Prisma :
+- Installation of Prisma dependencies:
 ```bash
 npm install prisma --save-dev
 npm install @prisma/client
 npx prisma init
-2️⃣ Configuration de la base de données MySQL
+```
 
-Installation de MySQL via Homebrew :
+## 2️⃣ MySQL Database Setup
 
+Installing MySQL via Homebrew:
+```bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 brew install mysql
 brew services start mysql
+```
 
-
-Création de la base de données et de l’utilisateur :
-
+Database & User Creation:
+```sql
 CREATE DATABASE rncpdb;
 CREATE USER 'rncpuser'@'localhost' IDENTIFIED BY 'RncpPass2025!';
 GRANT ALL PRIVILEGES ON rncpdb.* TO 'rncpuser'@'localhost';
 FLUSH PRIVILEGES;
+```
 
-
-Vérification de la connexion MySQL :
-
+Verify MySQL Connection:
+```bash
 mysql -u rncpuser -p
+```
 
-3️⃣ Configuration de Prisma
+## 3️⃣ Prisma Configuration
 
-Mise à jour du fichier .env :
-
+Update `.env` file:
+```env
 DATABASE_URL="mysql://rncpuser:RncpPass2025!@localhost:3306/rncpdb"
+```
 
-
-Synchronisation de Prisma avec la base de données :
-
+Sync Prisma with Database:
+```bash
 npx prisma db pull
 npx prisma migrate dev --name init
+```
 
-4️⃣ Gestion du projet avec GitHub
+## 4️⃣ Version Control with Git & GitHub
 
-Création d’un nouveau dépôt GitHub.
-
-Ajout du dépôt distant :
-
+Add remote repository:
+```bash
 git remote add origin https://github.com/RehabAlzarqa/skillspoints.git
+```
 
-
-Commit initial et push :
-
+Commit & Push:
+```bash
 git add .
 git commit -m "Initial commit with local project files"
 git push -u origin main
+```
 
-5️⃣ Dockerisation du projet
-Fichiers créés
+## 5️⃣ Dockerization
 
-Dockerfile → décrit comment construire et exécuter l'application Next.js.
+Created Files:
+- `Dockerfile` → Describes how to build and execute the Next.js application.
+- `.dockerignore` → Lists files to exclude when building container context.
+- `docker-compose.yml` → Orchestrates multi-container deployment.
 
-.dockerignore → liste les fichiers à ignorer lors de la copie dans le container.
-
-docker-compose.yml → orchestre le déploiement de tous les services.
-
-Commandes principales
-# Construire l'image Docker
+Main Commands:
+```bash
+# Build Docker image
 docker build -t skillspoints-app .
 
-# Lancer le container
+# Run container
 docker run -d -p 80:80 skillspoints-app
 
-# Lancer tous les services avec Docker Compose
+# Start all services with Docker Compose
 docker-compose up -d
 
-# Arrêter les containers
+# Stop containers
 docker-compose down
 
-# Vérifier les containers en cours d'exécution
+# Check running containers
 docker ps
+```
 
-Résultat attendu
+Expected Result:
+Access the Next.js application on 👉 `http://localhost:8080` (or configured port).
 
-L’application Next.js est accessible sur 👉 http://localhost:8080
- (ou selon la configuration du port).
+## 6️⃣ Technical Architecture
 
-6️⃣ Architecture technique
+The architecture is built on a modern client-server model, combining Next.js, Node.js API routes, MySQL, and Docker for portability, speed, and scalability.
 
-L’architecture repose sur une approche client-serveur moderne, combinant Next.js, Node.js/Express, MySQL et Docker pour garantir portabilité, performance et évolutivité.
+General Structure:
+- **Frontend (Next.js)**: User interface and data rendering from API.
+- **Backend (Next.js API Routes / Node.js)**: Business logic, database communications, and REST endpoints.
+- **Database (MySQL / Prisma)**: Persistent storage for users, micro-courses, points, and rewards.
 
-Structure générale
+Technical Rationale:
+- **Frontend (Next.js)**: React-based framework supporting SSR/SSG and high performance.
+- **Backend (Node.js API)**: Lightweight and flexible for REST endpoints.
+- **Database (MySQL)**: Reliable relational engine ideal for structured user and reward data.
+- **Orchestration (Docker)**: Guarantees consistency across dev and production environments.
 
-Frontend (Next.js) : interface utilisateur et consommation des données depuis l’API.
+Software Design Pattern: MVC (Model-View-Controller)
+- **Model**: Manages data structures and operations (via Prisma and MySQL).
+- **View**: Renders UI components using React and Tailwind CSS.
+- **Controller**: Manages application logic and API route handlers.
 
-Backend (Node.js / Express) : logique métier, communication avec la base de données et endpoints REST.
-
-Base de données (MySQL) : stockage des utilisateurs, mini-cours, points et récompenses.
-
-Raisons du choix technique
-Élément	Technologie choisie	Justification
-Frontend	Next.js	Framework moderne basé sur React, SSR & SSG, performant et modulable pour des interfaces réactives.
-Backend	Node.js / Express	Simple, flexible et performant pour construire des API REST.
-Base de données	MySQL	Système relationnel fiable et adapté à la gestion structurée des données.
-Orchestration	Docker	Facilite le déploiement et assure la compatibilité entre environnements.
-Choix des patrons d’architecture
-
-
-🎯 Architecture logicielle choisie : MVC pour le backend et le frontend
-
-L’ensemble du projet repose sur le modèle MVC (Model – View – Controller), appliqué à la fois au backend et au frontend, afin de garantir une structure claire, maintenable et cohérente entre les deux couches.
-
-Backend (Node.js / Express)
-
-Model : gère la structure et la manipulation des données (via Prisma et MySQL).
-
-View : non utilisée directement, les réponses sont renvoyées en JSON.
-
-Controller : contient la logique métier et gère les routes de l’API.
-
-Frontend (Next.js / React)
-
-Model : représente les données reçues depuis l’API.
-
-View : affiche les données via les composants React et les pages Next.js.
-
-Controller : gère les interactions et la logique via les hooks React.
-
-💡 Ce choix d’architecture MVC unifiée facilite la compréhension du code, renforce la cohérence entre les couches et simplifie la maintenance du projet.
-7️⃣ Vérifications supplémentaires
-
-Vérification des utilisateurs et privilèges MySQL :
-
-SELECT User, Host FROM mysql.user;
-SHOW GRANTS FOR 'rncpuser'@'localhost';
-
+```
          ┌─────────────┐
          │  Frontend   │
          │ (React/Next)│
          └─────┬───────┘
-               │  fetch / axios
+               │  fetch / API
                ▼
          ┌─────────────┐
          │   Backend   │
@@ -153,15 +125,14 @@ SHOW GRANTS FOR 'rncpuser'@'localhost';
    ┌───────────┴───────────┐
    │           │           │
 ┌─────────┐ ┌─────────┐ ┌─────────┐ ┌────────────┐
-│ /users  │ │ /courses│ │ /sessions│ │ /microcours│
-│ route.js│ │ route.js│ │ route.js │ │ creation   │
-│         │ │         │ │          │ │ route.js   │
-│         │ │         │ │          │ │ apprentissage│
-│         │ │         │ │          │ │ route.js   │
+│ /users  │ │ /courses│ │ /auth   │ │ /MicroCourse│
+│ route.ts│ │ route.ts│ │ route.ts│ │ route.ts   │
 └─────────┘ └─────────┘ └─────────┘ └────────────┘
                │
                ▼
          ┌─────────────┐
          │ Database    │
-         │ (MySQL/DB) │
+         │ (MySQL/DB)  │
          └─────────────┘
+```
+

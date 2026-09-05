@@ -2,27 +2,23 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { BookOpen } from "lucide-react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useState } from "react";
 
-export default function Page() {
+export default function LoginPage() {
   const router = useRouter();
-
   const [isLoading, setIsLoading] = useState(false);
 
-  // useFormik
   const form = useFormik({
     initialValues: { email: "", password: "" },
     validationSchema: Yup.object({
-      email: Yup.string().required("Email requis"),
+      email: Yup.string().email("Invalid email format").required("Email is required"),
       password: Yup.string()
-        .required("Mot de passe requis")
-        //match fun
+        .required("Password is required")
         .matches(
           /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-          "Le mot de passe doit être fort (8 caractères, majuscule, minuscule, chiffre et symbole)."
+          "Password must be strong (at least 8 characters, with uppercase, lowercase, number, and symbol)."
         ),
     }),
 
@@ -37,26 +33,28 @@ export default function Page() {
           password: values.password,
         }),
       })
-        .then((res) => res.json()) // ✅ مهم جدًا
+        .then((res) => res.json())
         .then((data) => {
-          // ✅ الآن هذا هو JSON الحقيقي
           if (data.message === "success") {
             localStorage.setItem("user", JSON.stringify(data.user));
             router.push("/dashboard");
           } else {
-            alert("Email ou mot de passe incorrect");
+            alert(data.message || "Invalid email or password");
           }
-
+          setIsLoading(false);
+        })
+        .catch(() => {
+          alert("An error occurred during login. Please try again.");
           setIsLoading(false);
         });
     },
-  }); 
+  });
 
   return (
     <div className="w-full bg-gradient-to-br from-cyan-100 via-emerald-50 to-pink-100 flex items-center justify-center px-4 min-h-screen">
       <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-10 text-center">
         <div className="flex justify-center mb-6">
-          <div className="bg-emerald-500 rounded-2xl w-16 h-16 flex items-center justify-center">
+          <div className="bg-emerald-500 rounded-2xl w-16 h-16 flex items-center justify-center shadow-lg shadow-emerald-500/20">
             <svg
               className="w-8 h-8 text-white"
               fill="currentColor"
@@ -68,10 +66,10 @@ export default function Page() {
         </div>
 
         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Bienvenue sur Skillspoints
+          Welcome to SkillsPoints
         </h1>
 
-        <p className="text-gray-600 mb-8">Connectez-vous pour continuer</p>
+        <p className="text-gray-600 mb-8">Sign in to your account to continue</p>
 
         {/* Form */}
         <form className="space-y-6" onSubmit={form.handleSubmit}>
@@ -88,20 +86,19 @@ export default function Page() {
               onChange={form.handleChange}
               onBlur={form.handleBlur}
               className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-              placeholder="votre@email.com"
+              placeholder="your@email.com"
             />
 
             {form.touched.email && form.errors.email && (
-              <p className="text-red-500 text-sm">{form.errors.email}</p>
+              <p className="text-red-500 text-sm text-left mt-1">{form.errors.email}</p>
             )}
           </div>
 
           {/* Password */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2 text-left">
-              Mot de passe
+              Password
             </label>
-            {/*  end of Password */}
 
             <input
               type="password"
@@ -114,7 +111,7 @@ export default function Page() {
             />
 
             {form.touched.password && form.errors.password && (
-              <p className="text-red-500 text-sm">{form.errors.password}</p>
+              <p className="text-red-500 text-sm text-left mt-1">{form.errors.password}</p>
             )}
           </div>
 
@@ -122,29 +119,29 @@ export default function Page() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 rounded-lg transition-colors duration-200"
+            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 rounded-lg transition-colors duration-200 cursor-pointer shadow-md shadow-emerald-500/20"
           >
-            {isLoading ? "Connexion en cours..." : "Se connecter"}
+            {isLoading ? "Signing in..." : "Sign In"}
           </button>
         </form>
-        {/* end of  Form */}
 
-        <div className="m-6 text-center">
+        <div className="my-6 text-center">
           <Link
             href="/forgetpassword"
-            className="text-sm text-[#4CAF50] hover:underline"
+            className="text-sm text-emerald-600 font-semibold hover:underline"
           >
-            Mot de passe oublie ?
+            Forgot password?
           </Link>
         </div>
 
         <Link
           href="/rgpd"
-          className="bg-gray-50 px-4 py-2 text-gray-600 rounded-xs cursor-pointer border border-gray-300"
+          className="text-xs text-gray-500 hover:text-gray-700 underline"
         >
-          Politique de confidentialité
+          Privacy Policy
         </Link>
       </div>
     </div>
   );
 }
+

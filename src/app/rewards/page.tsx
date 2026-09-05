@@ -3,15 +3,7 @@
 import React, { useState } from "react";
 import AppLayout from "@/app/components/AppLayout";
 import { REWARDS, CURRENT_USER } from "@/lib/mockData";
-import {
-  Coins,
-  Search,
-  CheckCircle2,
-  X,
-  Sparkles,
-  Gift,
-  Check,
-} from "lucide-react";
+import { Search, CheckCircle2, X } from "lucide-react";
 
 export default function RewardsPage() {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -48,21 +40,21 @@ export default function RewardsPage() {
         {/* Header Bar */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900">
               Rewards Marketplace
             </h1>
             <p className="text-slate-500 text-sm mt-1">
-              Redeem your points for amazing rewards.
+              Redeem your points for exclusive rewards.
             </p>
           </div>
 
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-50 border border-amber-200 rounded-full text-amber-700 font-bold text-sm shadow-2xs">
-            <Coins className="w-4 h-4 fill-amber-500 text-amber-600" />
-            <span>{CURRENT_USER.points.toLocaleString()} pts</span>
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#EBF3FF] border border-blue-200/80 rounded-full text-[#4086F4] font-extrabold text-sm shadow-2xs">
+            <span className="w-5 h-5 rounded-full bg-[#4086F4] text-white flex items-center justify-center text-xs">★</span>
+            <span>120 Points</span>
           </div>
         </div>
 
-        {/* Search & Category Bar */}
+        {/* Search Bar */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
           <div className="relative flex-1">
             <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -71,7 +63,7 @@ export default function RewardsPage() {
               placeholder="Search rewards..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:border-blue-500 focus:outline-none shadow-2xs"
+              className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-sm focus:border-[#4086F4] focus:outline-none shadow-2xs"
             />
           </div>
         </div>
@@ -84,7 +76,7 @@ export default function RewardsPage() {
               onClick={() => setSelectedCategory(cat)}
               className={`px-4 py-2 rounded-full text-xs font-semibold whitespace-nowrap transition cursor-pointer ${
                 selectedCategory === cat
-                  ? "bg-blue-600 text-white shadow-xs"
+                  ? "bg-[#4086F4] text-white shadow-2xs"
                   : "bg-white border border-slate-200 text-slate-600 hover:bg-slate-50"
               }`}
             >
@@ -93,18 +85,18 @@ export default function RewardsPage() {
           ))}
         </div>
 
-        {/* Product Grid */}
+        {/* Product Grid matching Reward mockup card style */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredRewards.map((reward) => (
             <div
               key={reward.id}
-              className="bg-white border border-slate-200 rounded-2xl p-6 hover:shadow-md transition flex flex-col justify-between space-y-4 group"
+              className="bg-gradient-to-br from-[#FFF9E6] via-[#FFF5D6] to-[#FFEAA7] border border-amber-200/80 rounded-2xl md:rounded-3xl p-6 hover:shadow-md transition flex flex-col justify-between space-y-4 shadow-2xs"
             >
               <div className="flex items-start justify-between">
-                <div className="w-16 h-16 rounded-2xl bg-amber-50 border border-amber-100 flex items-center justify-center text-3xl group-hover:scale-110 transition">
+                <div className="w-16 h-16 rounded-2xl bg-white/70 border border-amber-200 flex items-center justify-center text-3xl shadow-2xs">
                   {reward.image}
                 </div>
-                <span className="text-xs font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-200/60">
+                <span className="text-xs font-bold text-amber-900 bg-white/80 px-3 py-1 rounded-full border border-amber-300">
                   {reward.points.toLocaleString()} pts
                 </span>
               </div>
@@ -113,14 +105,14 @@ export default function RewardsPage() {
                 <h3 className="font-bold text-slate-900 text-base">
                   {reward.title}
                 </h3>
-                <p className="text-xs text-slate-400 mt-1">{reward.category}</p>
+                <p className="text-xs text-slate-600 mt-1">{reward.category}</p>
               </div>
 
               <button
                 onClick={() => handleRedeem(reward)}
-                className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition shadow-xs cursor-pointer"
+                className="w-full py-2.5 bg-[#4086F4] hover:bg-blue-600 text-white font-bold text-xs rounded-xl transition shadow-2xs cursor-pointer"
               >
-                Redeem
+                Redeem Reward
               </button>
             </div>
           ))}
@@ -137,7 +129,6 @@ export default function RewardsPage() {
                 <X className="w-5 h-5" />
               </button>
 
-              {/* Success Green Circle */}
               <div className="w-20 h-20 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto shadow-lg shadow-emerald-500/20">
                 <CheckCircle2 className="w-12 h-12" />
               </div>
@@ -146,7 +137,7 @@ export default function RewardsPage() {
                 <h2 className="text-2xl font-extrabold text-slate-900">
                   Redemption Successful!
                 </h2>
-                <h3 className="text-lg font-bold text-blue-600">
+                <h3 className="text-lg font-bold text-[#4086F4]">
                   {selectedReward.title}
                 </h3>
                 <p className="text-xs text-slate-500 leading-relaxed">
@@ -161,15 +152,9 @@ export default function RewardsPage() {
               <div className="space-y-3">
                 <button
                   onClick={() => setRedeemed(false)}
-                  className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl transition shadow-md shadow-blue-500/20 cursor-pointer"
+                  className="w-full py-3 bg-[#4086F4] hover:bg-blue-600 text-white font-bold text-sm rounded-xl transition shadow-2xs cursor-pointer"
                 >
                   Done
-                </button>
-                <button
-                  onClick={() => setRedeemed(false)}
-                  className="w-full py-2.5 text-xs font-bold text-slate-600 hover:text-slate-900 cursor-pointer"
-                >
-                  View my rewards
                 </button>
               </div>
             </div>
@@ -179,3 +164,4 @@ export default function RewardsPage() {
     </AppLayout>
   );
 }
+

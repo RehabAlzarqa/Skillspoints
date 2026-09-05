@@ -18,16 +18,16 @@ export default function ForgotPasswordPage() {
     validationSchema: yup.object({
       email: yup
         .string()
-        .email("Format email invalide")
-        .required("Email requis"),
+        .email("Invalid email format")
+        .required("Email is required"),
     }),
 
     onSubmit: async () => {
       setSubmitted(true);
 
       setTimeout(() => {
-        router.push("/");
-      }, 1000);
+        router.push("/login");
+      }, 1500);
     },
   });
 
@@ -36,18 +36,19 @@ export default function ForgotPasswordPage() {
       <div className="bg-white rounded-3xl shadow-2xl w-full max-w-md p-8 md:p-12">
         {/* Title */}
         <h1 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-3">
-          Password forget
+          Forgot Password
         </h1>
-        <p className="text-center text-gray-500 mb-8">
-          Entrez votre email pour recevoir les instructions
+        <p className="text-center text-gray-500 mb-8 text-sm">
+          Enter your email address to receive password reset instructions.
         </p>
-        <div>
+
+        <form onSubmit={form.handleSubmit} className="space-y-4">
           <div>
             <label
               htmlFor="email"
               className="block text-sm font-medium text-gray-700 mb-1"
             >
-              Email
+              Email Address
             </label>
             <input
               id="email"
@@ -56,35 +57,36 @@ export default function ForgotPasswordPage() {
               value={form.values.email}
               onChange={form.handleChange}
               onBlur={form.handleBlur}
-              placeholder="votre@email.com"
-              data-error={true}
-              className="w-full px-4 py-2 data-[error=false]:border-red-500 data-[error=false]:border-gray-500 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-400"
+              placeholder="your@email.com"
+              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-emerald-500 placeholder-gray-400 text-sm"
             />
-            <div className="text-red-500 text-xs text-right">
-              {form.errors.email}
-            </div>
-          </div>{" "}
+            {form.touched.email && form.errors.email && (
+              <div className="text-red-500 text-xs mt-1 text-left">
+                {form.errors.email}
+              </div>
+            )}
+          </div>
+
           {/* Submit Button */}
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              form.handleSubmit();
-            }}
             type="submit"
-            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 rounded-lg transition-colors duration-200 mt-4"
+            disabled={submitted}
+            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 rounded-xl transition-colors duration-200 cursor-pointer shadow-md shadow-emerald-500/20"
           >
-            {submitted ? "S'inscrire en cours..." : "S'inscrire"}
+            {submitted ? "Sending instructions..." : "Reset Password"}
           </button>
-          <div className="text-center mt-8">
-            <Link
-              href="/login"
-              className="text-green-500 hover:text-green-600 font-medium transition"
-            >
-              Retour à la connexion
-            </Link>
-          </div>
-        </div>{" "}
-      </div>{" "}
+        </form>
+
+        <div className="text-center mt-6">
+          <Link
+            href="/login"
+            className="text-emerald-600 hover:underline text-sm font-semibold transition"
+          >
+            Back to Sign In
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }
+
