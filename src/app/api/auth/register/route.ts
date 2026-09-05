@@ -40,7 +40,11 @@ export async function POST(request: NextRequest) {
     // ✅ save user
     const utilisateur = await prisma.user.create({
       data: {
+<<<<<<< HEAD:src/app/api/auth/register/route.ts
         name: name || "", // أو بدون || إذا متأكدة
+=======
+        name: name || "",
+>>>>>>> 8b8cf61a0fe35d4394e5c435a47f308a5fd2176a:src/app/api/auth/signup/route.ts
         email,
         password: hashedPassword,
         totalPoints: 0

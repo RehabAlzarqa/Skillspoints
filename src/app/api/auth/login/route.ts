@@ -17,14 +17,23 @@ export async function POST(req: Request) {
       );
     }
 
+<<<<<<< HEAD
 
     // create the post request
     const user = await prisma.user.findUnique({
+=======
+    // 3️⃣ جلب المستخدم
+    const utilisateur = await prisma.user.findUnique({
+>>>>>>> 8b8cf61a0fe35d4394e5c435a47f308a5fd2176a
       where: { email }
       
     });
 
+<<<<<<< HEAD
     if (!user.email || !user.password) {
+=======
+    if (!utilisateur || !utilisateur.password) {
+>>>>>>> 8b8cf61a0fe35d4394e5c435a47f308a5fd2176a
       return NextResponse.json(
         { message: "user  not exist" },
         { status: 401 }
@@ -34,7 +43,11 @@ export async function POST(req: Request) {
     // 4️⃣ مقارنة كلمة المرور
     const isValid = await bcrypt.compare(
       password,
+<<<<<<< HEAD
       user.password
+=======
+      utilisateur.password
+>>>>>>> 8b8cf61a0fe35d4394e5c435a47f308a5fd2176a
     );
 
     if (!isValid) {
@@ -49,8 +62,15 @@ export async function POST(req: Request) {
       {
         message: "success",
         user: {
+<<<<<<< HEAD
           name: user.name,
           email: user.email,
+=======
+          id: utilisateur.id,
+          name: utilisateur.name,
+          email: utilisateur.email,
+          totalPoints: utilisateur.totalPoints
+>>>>>>> 8b8cf61a0fe35d4394e5c435a47f308a5fd2176a
         }
       },
       { status: 200 }
