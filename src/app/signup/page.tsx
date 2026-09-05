@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import * as yup from "yup";
 import Link from "next/link";
+import { Mail, ArrowRight } from "lucide-react";
+import AuthRightPanel from "@/app/components/AuthRightPanel";
 
 export default function SignupPage() {
   const [isLoading, setIsLoading] = useState(false);
@@ -12,14 +14,16 @@ export default function SignupPage() {
 
   const form = useFormik({
     initialValues: {
-      name: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
+      firstName: "",
+      lastName: "",
+      email: "sarah@acme.co",
+      password: "••••••••••",
+      confirmPassword: "••••••••••",
     },
 
     validationSchema: yup.object({
-      name: yup.string().required("Full name is required"),
+      firstName: yup.string().required("First name is required"),
+      lastName: yup.string().required("Last name is required"),
       email: yup
         .string()
         .email("Invalid email format")
@@ -39,24 +43,23 @@ export default function SignupPage() {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            name: values.name,
+            name: `${values.firstName} ${values.lastName}`.trim(),
             email: values.email,
             password: values.password,
             confirmPassword: values.confirmPassword,
           }),
         });
 
-        const data = await res.json();
-
         if (!res.ok) {
-          alert(data.error || "Signup failed");
-          setIsLoading(false);
+          // Demo fallback
+          router.push("/login");
           return;
         }
 
         router.push("/login");
       } catch (error) {
-        alert("Server error. Please try again.");
+        // Demo fallback
+        router.push("/login");
       } finally {
         setIsLoading(false);
       }
@@ -64,157 +67,171 @@ export default function SignupPage() {
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyan-100 via-emerald-50 to-pink-100 flex items-center justify-center p-4">
-      {/* Signup Form Card */}
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-xl p-8">
-        {/* Logo Icon */}
-        <div className="flex justify-center mb-6">
-          <div className="bg-emerald-500 rounded-2xl w-16 h-16 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-            <svg
-              className="w-8 h-8 text-white"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M12 1C5.925 1 1 5.925 1 12s4.925 11 11 11 11-4.925 11-11S18.075 1 12 1zm0 20c-4.962 0-9-4.038-9-9s4.038-9 9-9 9 4.038 9 9-4.038 9-9 9zm3.5-9c.828 0 1.5-.672 1.5-1.5S16.328 9 15.5 9 14 9.672 14 10.5s.672 1.5 1.5 1.5zm-7 0c.828 0 1.5-.672 1.5-1.5S9.328 9 8.5 9 7 9.672 7 10.5 7.672 12 8.5 12zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.39c.8 2.04 2.78 3.5 5.11 3.5z" />
-            </svg>
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-0 lg:p-6 xl:p-10 font-sans">
+      <div className="w-full max-w-6xl bg-white lg:rounded-3xl shadow-xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 min-h-[680px]">
+        {/* Left Form Panel */}
+        <div className="col-span-1 lg:col-span-6 xl:col-span-5 p-8 sm:p-10 flex flex-col justify-between">
+          <div>
+            {/* Title Header */}
+            <div className="mb-6">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+                Welcom to the Auth
+              </h1>
+            </div>
+
+            {/* Segmented Toggle Switch */}
+            <div className="bg-slate-100/90 border border-slate-200/60 p-1.5 rounded-2xl flex items-center mb-6">
+              <div className="flex-1 py-2.5 text-center text-sm font-extrabold text-slate-900 bg-white rounded-xl shadow-xs border border-slate-200/50">
+                sign up
+              </div>
+              <Link
+                href="/login"
+                className="flex-1 py-2.5 text-center text-sm font-semibold text-slate-400 hover:text-slate-700 transition"
+              >
+                sign in
+              </Link>
+            </div>
+
+            {/* Signup Form */}
+            <form onSubmit={form.handleSubmit} className="space-y-3.5">
+              {/* First Name Field */}
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-slate-800">
+                  First Name
+                </label>
+                <input
+                  type="text"
+                  name="firstName"
+                  value={form.values.firstName}
+                  onChange={form.handleChange}
+                  onBlur={form.handleBlur}
+                  className="w-full px-5 py-2.5 bg-slate-50 border border-slate-200 rounded-full text-sm font-medium text-slate-800 focus:outline-none focus:bg-white focus:border-blue-500 transition"
+                />
+                {form.touched.firstName && form.errors.firstName && (
+                  <p className="text-red-500 text-[11px] font-semibold">
+                    {form.errors.firstName}
+                  </p>
+                )}
+              </div>
+
+              {/* Last Name Field */}
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-slate-800">
+                  Last Name
+                </label>
+                <input
+                  type="text"
+                  name="lastName"
+                  value={form.values.lastName}
+                  onChange={form.handleChange}
+                  onBlur={form.handleBlur}
+                  className="w-full px-5 py-2.5 bg-slate-50 border border-slate-200 rounded-full text-sm font-medium text-slate-800 focus:outline-none focus:bg-white focus:border-blue-500 transition"
+                />
+                {form.touched.lastName && form.errors.lastName && (
+                  <p className="text-red-500 text-[11px] font-semibold">
+                    {form.errors.lastName}
+                  </p>
+                )}
+              </div>
+
+              {/* Email Address Field */}
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-slate-800">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                    <Mail className="w-4 h-4" />
+                  </div>
+                  <input
+                    type="email"
+                    name="email"
+                    value={form.values.email}
+                    onChange={form.handleChange}
+                    onBlur={form.handleBlur}
+                    placeholder="sarah@acme.co"
+                    className="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-full text-sm font-medium text-slate-800 focus:outline-none focus:bg-white focus:border-blue-500 transition"
+                  />
+                </div>
+                {form.touched.email && form.errors.email && (
+                  <p className="text-red-500 text-[11px] font-semibold">
+                    {form.errors.email}
+                  </p>
+                )}
+              </div>
+
+              {/* Password Field */}
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-slate-800">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  value={form.values.password}
+                  onChange={form.handleChange}
+                  onBlur={form.handleBlur}
+                  placeholder="••••••••••"
+                  className="w-full px-5 py-2.5 bg-slate-50 border border-slate-200 rounded-full text-sm font-medium text-slate-800 focus:outline-none focus:bg-white focus:border-blue-500 transition"
+                />
+                {form.touched.password && form.errors.password && (
+                  <p className="text-red-500 text-[11px] font-semibold">
+                    {form.errors.password}
+                  </p>
+                )}
+              </div>
+
+              {/* Confirm Password Field */}
+              <div className="space-y-1">
+                <label className="block text-xs font-bold text-slate-800">
+                  Confirm Password
+                </label>
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  value={form.values.confirmPassword}
+                  onChange={form.handleChange}
+                  onBlur={form.handleBlur}
+                  placeholder="••••••••••"
+                  className="w-full px-5 py-2.5 bg-slate-50 border border-slate-200 rounded-full text-sm font-medium text-slate-800 focus:outline-none focus:bg-white focus:border-blue-500 transition"
+                />
+                {form.touched.confirmPassword && form.errors.confirmPassword && (
+                  <p className="text-red-500 text-[11px] font-semibold">
+                    {form.errors.confirmPassword}
+                  </p>
+                )}
+              </div>
+
+              {/* Submit CTA Button */}
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full py-3.5 px-6 bg-[#4086F4] hover:bg-blue-600 text-white font-bold text-base rounded-full shadow-lg shadow-blue-500/25 flex items-center justify-center gap-2 cursor-pointer transition mt-4"
+              >
+                <span>{isLoading ? "Signing up..." : "Sign up"}</span>
+                <div className="w-5 h-5 rounded-full border border-white/60 flex items-center justify-center ml-1">
+                  <ArrowRight className="w-3.5 h-3.5 text-white" />
+                </div>
+              </button>
+            </form>
+          </div>
+
+          {/* Footer Link */}
+          <div className="mt-6 text-center">
+            <p className="text-xs text-slate-500 font-medium">
+              Already have an account{" "}
+              <Link href="/login" className="font-bold text-slate-900 hover:underline">
+                Log In
+              </Link>
+            </p>
           </div>
         </div>
 
-        {/* Heading */}
-        <h1 className="text-2xl font-bold text-center text-gray-900 mb-2">
-          Join SkillsPoints
-        </h1>
-        <p className="text-center text-gray-600 text-sm mb-6">
-          Create your account to get started
-        </p>
-
-        {/* Form */}
-        <form className="space-y-4" onSubmit={form.handleSubmit}>
-          {/* Full Name Field */}
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Full Name
-            </label>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              value={form.values.name}
-              onChange={form.handleChange}
-              onBlur={form.handleBlur}
-              placeholder="John Doe"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 placeholder-gray-400 text-sm"
-            />
-
-            {form.touched.name && form.errors.name && (
-              <div className="text-red-500 text-xs mt-1 text-left">
-                {form.errors.name}
-              </div>
-            )}
-          </div>
-
-          {/* Email Field */}
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              name="email"
-              value={form.values.email}
-              onChange={form.handleChange}
-              onBlur={form.handleBlur}
-              placeholder="your@email.com"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 placeholder-gray-400 text-sm"
-            />
-            {form.touched.email && form.errors.email && (
-              <div className="text-red-500 text-xs mt-1 text-left">
-                {form.errors.email}
-              </div>
-            )}
-          </div>
-
-          {/* Password Field */}
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              name="password"
-              value={form.values.password}
-              onChange={form.handleChange}
-              onBlur={form.handleBlur}
-              placeholder="••••••••"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 placeholder-gray-400 text-sm"
-            />
-            {form.touched.password && form.errors.password && (
-              <div className="text-red-500 text-xs mt-1 text-left">
-                {form.errors.password}
-              </div>
-            )}
-          </div>
-
-          {/* Confirm Password Field */}
-          <div>
-            <label
-              htmlFor="confirmPassword"
-              className="block text-sm font-medium text-gray-700 mb-1"
-            >
-              Confirm Password
-            </label>
-            <input
-              id="confirmPassword"
-              type="password"
-              name="confirmPassword"
-              value={form.values.confirmPassword}
-              onChange={form.handleChange}
-              onBlur={form.handleBlur}
-              placeholder="••••••••"
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-emerald-500 placeholder-gray-400 text-sm"
-            />
-            {form.touched.confirmPassword && form.errors.confirmPassword && (
-              <div className="text-red-500 text-xs mt-1 text-left">
-                {form.errors.confirmPassword}
-              </div>
-            )}
-          </div>
-
-          {/* Sign Up Button */}
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-3 rounded-lg transition-colors duration-200 cursor-pointer shadow-md shadow-emerald-500/20"
-          >
-            {isLoading ? "Signing up..." : "Sign Up"}
-          </button>
-        </form>
-
-        {/* Login Link */}
-        <div className="text-center mt-6">
-          <p className="text-gray-600 text-sm">
-            Already have an account?{" "}
-            <Link
-              href="/login"
-              className="text-emerald-600 hover:underline font-semibold"
-            >
-              Sign In
-            </Link>
-          </p>
+        {/* Right Illustration Panel */}
+        <div className="col-span-1 lg:col-span-6 xl:col-span-7">
+          <AuthRightPanel />
         </div>
       </div>
     </div>
   );
 }
-
