@@ -21,8 +21,6 @@ export default function AppLayout({ children, activePath }: AppLayoutProps) {
     { name: "Micro-Courses", href: "/courses" },
     { name: "Reward", href: "/rewards" },
     { name: "My Learning", href: "/my-learning" },
-    { name: "Leaderboard", href: "/leaderboard" },
-    { name: "Create Course", href: "/create-course" },
   ];
 
   return (
@@ -137,4 +135,3 @@ export default function AppLayout({ children, activePath }: AppLayoutProps) {
     </div>
   );
 }
-
