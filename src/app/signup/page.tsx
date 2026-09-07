@@ -16,9 +16,9 @@ export default function SignupPage() {
     initialValues: {
       firstName: "",
       lastName: "",
-      email: "sarah@acme.co",
-      password: "••••••••••",
-      confirmPassword: "••••••••••",
+      email: "",
+      password: "",
+      confirmPassword: "",
     },
 
     validationSchema: yup.object({
