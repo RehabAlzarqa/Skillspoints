@@ -14,29 +14,21 @@ model User {
   totalPoints   Int
   createdAt     DateTime        @default(now())
   idUser        Int             @id @default(autoincrement())
-  learnings     Learning[]
   microCourses  MicroCourse[]
+  MyLearning    MyLearning[]
   rewardHistory RewardHistory[]
 }
 
 model MicroCourse {
   title         String
   description   String?
-  createdAt     DateTime   @default(now())
+  createdAt     DateTime     @default(now())
   creatorId     Int
-  idMicroCourse Int        @id @default(autoincrement())
-  learnings     Learning[]
-  creator       User       @relation(fields: [creatorId], references: [idUser])
-}
+  idMicroCourse Int          @id @default(autoincrement())
+  creator       User         @relation(fields: [creatorId], references: [idUser])
+  MyLearning    MyLearning[]
 
-model Learning {
-  idLearning    Int         @id @default(autoincrement())
-  userId        Int
-  microCourseId Int
-  startDate     DateTime    @default(now())
-  status        String
-  microCourse   MicroCourse @relation(fields: [microCourseId], references: [idMicroCourse])
-  user          User        @relation(fields: [userId], references: [idUser])
+  @@index([creatorId])
 }
 
 model RewardHistory {
@@ -46,6 +38,9 @@ model RewardHistory {
   obtainedAt DateTime @default(now())
   reward     Reward   @relation(fields: [rewardId], references: [idReward])
   user       User     @relation(fields: [userId], references: [idUser])
+
+  @@index([rewardId])
+  @@index([userId])
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -56,4 +51,18 @@ model Reward {
   requiredPoints    Int
   availableQuantity Int?
   rewardHistory     RewardHistory[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model MyLearning {
+  idMyLearning  Int         @id(map: "Learning_pkey") @default(autoincrement())
+  userId        Int
+  microCourseId Int
+  startDate     DateTime    @default(now())
+  status        String
+  MicroCourse   MicroCourse @relation(fields: [microCourseId], references: [idMicroCourse], map: "Learning_microCourseId_fkey")
+  User          User        @relation(fields: [userId], references: [idUser], map: "Learning_userId_fkey")
+
+  @@index([microCourseId])
+  @@index([userId])
 }
