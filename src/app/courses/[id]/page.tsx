@@ -32,6 +32,21 @@ export default function CourseDetailsPage({
   );
   const [saved, setSaved] = useState(false);
 
+  const overviewRef = React.useRef<HTMLDivElement>(null);
+  const lessonsRef = React.useRef<HTMLDivElement>(null);
+  const reviewsRef = React.useRef<HTMLDivElement>(null);
+
+  const handleTabClick = (tab: "overview" | "lessons" | "reviews") => {
+    setActiveTab(tab);
+    if (tab === "overview" && overviewRef.current) {
+      overviewRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else if (tab === "lessons" && lessonsRef.current) {
+      lessonsRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    } else if (tab === "reviews" && reviewsRef.current) {
+      reviewsRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
   return (
     <AppLayout activePath="/courses">
       <div className="space-y-6">
@@ -146,7 +161,7 @@ export default function CourseDetailsPage({
           {/* Navigation Tabs */}
           <div className="border-t border-slate-200 px-6 flex items-center gap-8 text-sm font-semibold text-slate-600">
             <button
-              onClick={() => setActiveTab("overview")}
+              onClick={() => handleTabClick("overview")}
               className={`py-4 border-b-2 transition cursor-pointer ${
                 activeTab === "overview"
                   ? "border-blue-600 text-blue-600"
@@ -156,7 +171,7 @@ export default function CourseDetailsPage({
               Overview
             </button>
             <button
-              onClick={() => setActiveTab("lessons")}
+              onClick={() => handleTabClick("lessons")}
               className={`py-4 border-b-2 transition cursor-pointer ${
                 activeTab === "lessons"
                   ? "border-blue-600 text-blue-600"
@@ -166,7 +181,7 @@ export default function CourseDetailsPage({
               Lessons ({LESSONS_DATA.length})
             </button>
             <button
-              onClick={() => setActiveTab("reviews")}
+              onClick={() => handleTabClick("reviews")}
               className={`py-4 border-b-2 transition cursor-pointer ${
                 activeTab === "reviews"
                   ? "border-blue-600 text-blue-600"
@@ -183,7 +198,10 @@ export default function CourseDetailsPage({
           {/* Main Details (Left 2 cols) */}
           <div className="lg:col-span-2 space-y-6">
             {/* About this course */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4">
+            <div
+              ref={overviewRef}
+              className="scroll-mt-6 bg-white border border-slate-200 rounded-2xl p-6 space-y-4"
+            >
               <h2 className="text-lg font-bold text-slate-900">
                 About this course
               </h2>
@@ -210,7 +228,10 @@ export default function CourseDetailsPage({
             </div>
 
             {/* Lessons preview list */}
-            <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4">
+            <div
+              ref={lessonsRef}
+              className="scroll-mt-6 bg-white border border-slate-200 rounded-2xl p-6 space-y-4"
+            >
               <h2 className="text-lg font-bold text-slate-900">
                 Lessons ({LESSONS_DATA.length})
               </h2>
@@ -238,7 +259,38 @@ export default function CourseDetailsPage({
                 ))}
               </div>
             </div>
+
+            {/* Reviews list */}
+            <div
+              ref={reviewsRef}
+              className="scroll-mt-6 bg-white border border-slate-200 rounded-2xl p-6 space-y-4"
+            >
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-bold text-slate-900">
+                  Reviews (24)
+                </h2>
+                <div className="flex items-center gap-1 text-amber-500 text-xs font-bold">
+                  <span>★ 4.9</span>
+                  <span className="text-slate-400 font-normal">(24 ratings)</span>
+                </div>
+              </div>
+              <div className="space-y-3 divide-y divide-slate-100">
+                {[
+                  { name: "John Miller", role: "Product Manager", comment: "Great overview of essential security practices. Concise and actionable!" },
+                  { name: "Emily Watson", role: "UX Designer", comment: "Very practical lessons with interactive quizzes. Highly recommended!" }
+                ].map((rev, idx) => (
+                  <div key={idx} className={`${idx > 0 ? "pt-3" : ""} space-y-1`}>
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="font-bold text-slate-800">{rev.name}</span>
+                      <span className="text-amber-500">★★★★★</span>
+                    </div>
+                    <p className="text-xs text-slate-600">{rev.comment}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
+
 
           {/* Right Sidebar Metadata */}
           <div className="space-y-6">
