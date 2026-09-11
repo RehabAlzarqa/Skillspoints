@@ -4,62 +4,58 @@ import bcrypt from "bcrypt";
 
 export async function POST(req: Request) {
   try {
-    // read data
-    const body =  await req.json();
-    const { email, password } = await req.json();
-    // read data
+    // 1️⃣ Parse request body
+    const { email, password } = await request.json();
 
-    // validation
+    // 2️⃣ Initial validation
     if (!email || !password) {
       return NextResponse.json(
-        { message: "all fields are required" },
+        { message: "Missing email or password" },
         { status: 400 }
       );
     }
 
-
-    // create the post request
+    // 3️⃣ Fetch user
     const user = await prisma.user.findUnique({
-      where: { email }
-      
+      where: { email },
     });
 
-    if (!user.email || !user.password) {
+    if (!user || !user.password) {
       return NextResponse.json(
-        { message: "user  not exist" },
+        { message: "User not found" },
         { status: 401 }
       ); 
     }
 
-    // 4️⃣ مقارنة كلمة المرور
-    const isValid = await bcrypt.compare(
-      password,
-      user.password
-    );
+    // 4️⃣ Verify password
+    const isValid = await bcrypt.compare(password, user.password);
 
     if (!isValid) {
       return NextResponse.json(
-        { message: "password not matching" },
+        { message: "Incorrect password" },
         { status: 401 }
       );
     }
 
-    // 5️⃣ نجاح تسجيل الدخول
+    // 5️⃣ Successful login response
     return NextResponse.json(
       {
         message: "success",
         user: {
+          id: user.id,
           name: user.name,
           email: user.email,
-        }
+          totalPoints: user.totalPoints,
+        },
       },
       { status: 200 }
     );
   } catch (error) {
     console.error("LOGIN_ERROR:", error);
     return NextResponse.json(
-      { message: "error " },
+      { message: "Internal server error" },
       { status: 500 }
     );
   }
 }
+
